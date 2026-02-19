@@ -1,0 +1,13 @@
+{
+  "name": "refueling-tracker",
+  "version": "0.0.1",
+  "description": "Controla los consumos de tus coches",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "LGPL-3.0-or-later"
+}
