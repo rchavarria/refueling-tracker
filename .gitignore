@@ -142,6 +142,7 @@ vite.config.ts.timestamp-*
 *.db
 *.db-journal
 prisma/dev.db
+backend/src/generated/prisma
 
 # IDE
 .idea/
