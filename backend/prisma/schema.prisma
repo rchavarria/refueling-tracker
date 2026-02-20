@@ -1,0 +1,33 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Vehicle {
+  id           Int         @id @default(autoincrement())
+  name         String      @unique
+  brand        String
+  model        String
+  licensePlate String
+  year         Int
+  refuelings   Refueling[]
+}
+
+model Refueling {
+  id         Int      @id @default(autoincrement())
+  vehicleId  Int
+  date       DateTime
+  liters     Float
+  totalPrice Float
+  mileage    Int
+  station    String
+  vehicle    Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+}
