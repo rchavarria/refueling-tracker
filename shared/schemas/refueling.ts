@@ -1,0 +1,24 @@
+import { z } from "zod";
+
+/** Shape used when creating a refueling (no id, no vehicleId — extracted from route) */
+export const createRefuelingSchema = z.object({
+  date: z.string().datetime({ message: "Date must be a valid ISO 8601 datetime" }),
+  liters: z.number().positive("Liters must be a positive number"),
+  totalPrice: z.number().positive("Total price must be a positive number"),
+  mileage: z.number().int().positive("Mileage must be a positive integer"),
+  station: z.string().optional(),
+});
+
+/** Partial version for PATCH requests */
+export const updateRefuelingSchema = createRefuelingSchema.partial();
+
+/** Full refueling as returned by the API (includes id and vehicleId) */
+export const refuelingSchema = createRefuelingSchema.extend({
+  id: z.number().int(),
+  vehicleId: z.number().int(),
+});
+
+export type CreateRefueling = z.infer<typeof createRefuelingSchema>;
+export type UpdateRefueling = z.infer<typeof updateRefuelingSchema>;
+export type Refueling = z.infer<typeof refuelingSchema>;
+

@@ -1,3 +1,2 @@
-// Shared Zod schemas — will be populated in Step 4
-export {};
-
+export * from "./vehicle.js";
+export * from "./refueling.js";
