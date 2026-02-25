@@ -18,7 +18,15 @@ export const refuelingSchema = createRefuelingSchema.extend({
   vehicleId: z.number().int(),
 });
 
+/** Minimal shape needed to calculate consumption statistics */
+export const refuelingForStatsSchema = z.object({
+  mileage: z.number().int().positive(),
+  liters: z.number().positive(),
+  totalPrice: z.number().positive(),
+});
+
 export type CreateRefueling = z.infer<typeof createRefuelingSchema>;
 export type UpdateRefueling = z.infer<typeof updateRefuelingSchema>;
 export type Refueling = z.infer<typeof refuelingSchema>;
+export type RefuelingForStats = z.infer<typeof refuelingForStatsSchema>;
 
