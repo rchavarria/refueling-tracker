@@ -1,0 +1,38 @@
+services:
+  backend:
+    image: node:22-alpine
+    working_dir: /app
+    command: sh -c "npm install && npm run dev --workspace=backend"
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - DATABASE_URL=file:./prisma/dev.db
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/backend/node_modules
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    restart: unless-stopped
+  frontend:
+    image: node:22-alpine
+    working_dir: /app
+    command: sh -c "npm install && npm run dev:frontend"
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_TARGET=http://backend:3000
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/frontend/node_modules
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped

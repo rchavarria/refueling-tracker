@@ -19,7 +19,11 @@
     "db:reset": "npm run db:reset --workspace=backend",
     "lint": "npx @biomejs/biome check .",
     "lint:fix": "npx @biomejs/biome check --write .",
-    "format": "npx @biomejs/biome format --write ."
+    "format": "npx @biomejs/biome format --write .",
+    "docker:build": "docker compose build",
+    "docker:up": "docker compose up",
+    "docker:down": "docker compose down",
+    "docker:dev": "docker compose -f docker-compose.dev.yml up"
   },
   "keywords": [],
   "author": "",
