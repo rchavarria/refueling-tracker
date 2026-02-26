@@ -14,6 +14,7 @@ ENV VITE_API_URL=$VITE_API_URL
 WORKDIR /app/frontend
 # Build the frontend
 RUN npm run build
+
 # --- Production stage ---
 FROM nginx:1.27-alpine AS production
 # Remove default nginx static files

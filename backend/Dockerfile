@@ -8,11 +8,17 @@ COPY shared/ ./shared/
 COPY backend/ ./backend/
 # Install all dependencies (including devDependencies for build)
 RUN npm ci
+RUN npm run build --workspace=shared
+RUN npm run build --workspace=backend
+
 # Generate Prisma client
 WORKDIR /app/backend
 RUN npx prisma generate
 # Compile TypeScript (rootDir=.. so output is dist/backend/src/ and dist/backend/prisma/)
 RUN npx tsc --project tsconfig.docker.json
+
+RUN npm run db:seed
+
 # --- Production stage ---
 FROM node:22-alpine AS production
 WORKDIR /app
