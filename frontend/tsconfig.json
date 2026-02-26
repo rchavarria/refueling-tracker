@@ -11,7 +11,7 @@
     "outDir": "./dist",
     "baseUrl": ".",
     "paths": {
-      "@shared/*": ["../shared/*"]
+      "@shared/*": ["../shared/dist/*"]
     },
     "resolveJsonModule": true,
     "isolatedModules": true,

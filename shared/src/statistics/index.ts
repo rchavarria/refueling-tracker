@@ -1,4 +1,4 @@
-import type { RefuelingForStats } from "../schemas/refueling.js";
+import type { RefuelingForStats } from "@shared/src/schemas/refueling";
 
 /** Result of consumption calculation for a single refueling.
  *  All fields are null for the first refueling or when two consecutive

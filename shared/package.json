@@ -3,9 +3,10 @@
   "version": "0.0.1",
   "description": "Shared Zod schemas and types for refueling-tracker",
   "type": "module",
-  "main": "schemas/index.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "echo 'No build step for shared'"
+    "build": "tsc"
   },
   "dependencies": {
     "zod": "^3.24.2"
