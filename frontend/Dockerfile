@@ -1,5 +1,4 @@
-# --- Builder stage ---
-FROM node:22-alpine AS builder
+FROM node:24-alpine
 
 WORKDIR /app
 
@@ -10,7 +9,7 @@ COPY shared/ ./shared/
 COPY frontend/ ./frontend/
 
 # Install all dependencies
-RUN npm ci
+RUN npm clean-install
 
 # Build arg for API URL (baked into the static bundle at build time)
 #ARG VITE_API_URL=http://localhost:3000

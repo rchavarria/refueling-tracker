@@ -20,15 +20,14 @@
     "lint": "npx @biomejs/biome check .",
     "lint:fix": "npx @biomejs/biome check --write .",
     "format": "npx @biomejs/biome format --write .",
-    "docker:build": "docker compose build",
-    "docker:up": "docker compose up",
-    "docker:down": "docker compose down",
-    "docker:dev": "docker compose -f docker-compose.dev.yml up"
+    "docker:up": "docker compose up --build",
+    "docker:down": "docker compose down --rmi all --remove-orphans"
   },
   "keywords": [],
   "author": "",
   "license": "LGPL-3.0-or-later",
   "devDependencies": {
-    "@biomejs/biome": "^1.9.4"
+    "@biomejs/biome": "^1.9.4",
+    "@types/node": "25.3.2"
   }
 }

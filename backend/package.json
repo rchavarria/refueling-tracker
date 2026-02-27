@@ -4,11 +4,13 @@
   "description": "Backend API for refueling-tracker",
   "type": "module",
   "scripts": {
+    "predev": "npm run prisma:generate",
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
     "test": "vitest run",
     "test:watch": "vitest",
+    "prisma:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:seed": "tsx src/prisma/seed.ts",
     "db:reset": "prisma migrate reset --force"
@@ -27,8 +29,5 @@
     "tsx": "^4.19.3",
     "typescript": "^5.7.3",
     "vitest": "^3.0.7"
-  },
-  "prisma": {
-    "seed": "tsx prisma/seed.ts"
   }
 }

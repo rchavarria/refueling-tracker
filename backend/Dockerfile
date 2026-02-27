@@ -1,4 +1,6 @@
-FROM node:22-alpine
+FROM node:24-alpine
+
+EXPOSE 3000
 
 WORKDIR /app
 
@@ -7,21 +9,12 @@ COPY package.json package-lock.json ./
 COPY shared/package.json ./shared/
 COPY backend/package.json ./backend/
 # Install dependencies
-RUN npm ci
-
-# copy source code (.ts files)
-COPY shared/ ./shared/
-COPY backend/ ./backend/
+RUN npm clean-install
 
 # Copy entrypoint
 COPY backend/entrypoint.sh ./backend/entrypoint.sh
 RUN chmod +x ./backend/entrypoint.sh
 
 WORKDIR /app/backend
-RUN npx prisma generate
-
-RUN npm run db:seed
-
-EXPOSE 3000
 
 ENTRYPOINT ["./entrypoint.sh"]
