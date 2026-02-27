@@ -4,9 +4,11 @@
     "rootDir": "..",
     "outDir": "./dist",
     "paths": {
-      "@shared/*": ["../shared/*"]
+      "@shared/*": ["../shared/dist/*"]
     }
   },
-  "include": ["src/**/*.ts", "prisma/seed.ts", "../shared/**/*.ts"],
+  "include": ["src/**/*.ts",
+    "src/prisma/seed.ts"
+  ],
   "exclude": ["node_modules", "dist"]
 }

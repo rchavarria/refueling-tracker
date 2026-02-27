@@ -11,9 +11,10 @@ RUN npm ci
 # Build arg for API URL (baked into the static bundle at build time)
 ARG VITE_API_URL=http://localhost:3000
 ENV VITE_API_URL=$VITE_API_URL
-WORKDIR /app/frontend
+
 # Build the frontend
-RUN npm run build
+RUN npm run build --workspace=shared
+RUN npm run build --workspace=frontend
 
 # --- Production stage ---
 FROM nginx:1.27-alpine AS production

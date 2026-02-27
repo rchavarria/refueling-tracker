@@ -1,0 +1,8 @@
+### GET health check for the API
+GET http://localhost:3000/api/health
+
+### GET all vehicles
+GET http://localhost:3000/api/vehicles
+
+### GET refuels for a specific vehicle
+GET http://localhost:3000/api/vehicles/4/refuelings
