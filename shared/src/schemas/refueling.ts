@@ -2,7 +2,8 @@ import { z } from "zod";
 
 /** Shape used when creating a refueling (no id, no vehicleId — extracted from route) */
 export const createRefuelingSchema = z.object({
-  date: z.string().datetime({ message: "Date must be a valid ISO 8601 datetime" }),
+  date: z.string()
+    .date("Date must be a valid date string"),
   liters: z.number().positive("Liters must be a positive number"),
   totalPrice: z.number().positive("Total price must be a positive number"),
   mileage: z.number().int().positive("Mileage must be a positive integer"),

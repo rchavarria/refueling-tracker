@@ -25,8 +25,7 @@ export default function RefuelingForm({ onSubmit, error, loading }: Props) {
   } = useForm<FormValues>({ resolver: zodResolver(createRefuelingSchema) });
 
   async function handleValid(values: FormValues) {
-    // Convert local date string to ISO 8601 datetime
-    const iso = new Date(values.date).toISOString();
+    const iso = new Date(values.date).toISOString().split("T")[0];
     await onSubmit({ ...values, date: iso });
   }
 
