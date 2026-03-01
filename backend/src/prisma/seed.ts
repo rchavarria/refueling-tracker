@@ -1,10 +1,13 @@
 import "dotenv/config";
+import {PrismaBetterSqlite3} from "@prisma/adapter-better-sqlite3";
+import {env} from "prisma/config";
 import { PrismaClient } from "../generated/prisma/client";
 
-const prisma = new PrismaClient();
+const adapter = new PrismaBetterSqlite3({ url: env("DATABASE_URL") });
+const prisma = new PrismaClient({ adapter });
 
 async function main() {
-	const database = process.env.DATABASE_URL;
+	const database = env("DATABASE_URL");
 	if (database && database.indexOf("prod") >= 0) {
 		console.error("Refusing to seed production database:", database);
 		process.exit(1);
