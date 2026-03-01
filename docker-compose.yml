@@ -26,6 +26,9 @@ services:
       dockerfile: frontend/Dockerfile
     ports:
       - "5173:5173"
+    volumes:
+      - ./frontend:/app/frontend
+      - ./shared:/app/shared
     depends_on:
       backend:
         condition: service_healthy
