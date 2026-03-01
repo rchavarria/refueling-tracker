@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 async function main() {
 	const database = process.env.DATABASE_URL;
-	if (database.indexOf("prod") >= 0) {
+	if (database && database.indexOf("prod") >= 0) {
 		console.error("Refusing to seed production database:", database);
 		process.exit(1);
 	}
