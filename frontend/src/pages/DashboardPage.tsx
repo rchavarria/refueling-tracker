@@ -1,4 +1,5 @@
 import type { Refueling } from "@shared/schemas/refueling.js";
+import type { MonthlyAggregateRow } from "@shared/schemas/statistics.js";
 import type { Vehicle } from "@shared/schemas/vehicle.js";
 import { calculateConsumption } from "@shared/statistics/index.js";
 import {
@@ -15,6 +16,7 @@ import {
 import { useEffect, useState } from "react";
 import { Bar, Line } from "react-chartjs-2";
 import { fetchVehicleRefuelings } from "../api/refuelings";
+import { fetchMonthlyAggregate } from "../api/statistics";
 import { fetchVehicles } from "../api/vehicles";
 
 ChartJS.register(
@@ -35,14 +37,25 @@ function formatDate(iso: string): string {
   return `${day}/${month}/${d.getFullYear()}`;
 }
 
+const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+/** Formats "2026-02" → "Feb 2026" */
+function formatMonth(month: string): string {
+  const [year, m] = month.split("-");
+  return `${MONTH_NAMES[Number(m) - 1]} ${year}`;
+}
+
 export default function DashboardPage() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [refuelings, setRefuelings] = useState<Refueling[]>([]);
   const [loadingVehicles, setLoadingVehicles] = useState(true);
   const [loadingRefuelings, setLoadingRefuelings] = useState(false);
+  const [monthlyData, setMonthlyData] = useState<MonthlyAggregateRow[]>([]);
+  const [loadingMonthly, setLoadingMonthly] = useState(true);
+  const [monthlyError, setMonthlyError] = useState<string | null>(null);
 
-  // Load vehicle list on mount
+  // Load vehicle list and monthly aggregate on mount
   useEffect(() => {
     fetchVehicles()
       .then((list) => {
@@ -50,6 +63,11 @@ export default function DashboardPage() {
         if (list.length > 0) setSelectedId(list[0].id);
       })
       .finally(() => setLoadingVehicles(false));
+
+    fetchMonthlyAggregate()
+      .then(setMonthlyData)
+      .catch(() => setMonthlyError("Failed to load monthly statistics"))
+      .finally(() => setLoadingMonthly(false));
   }, []);
 
   // Load refuelings whenever selected vehicle changes
@@ -130,6 +148,51 @@ export default function DashboardPage() {
           </select>
         )}
       </div>
+
+      {/* Monthly Aggregate Table */}
+      <section className="mb-8">
+        <h2 className="text-lg font-semibold text-gray-700 mb-3">Last 12 Months</h2>
+        {loadingMonthly ? (
+          <p className="text-gray-500">Loading...</p>
+        ) : monthlyError ? (
+          <p className="text-red-500">{monthlyError}</p>
+        ) : monthlyData.every((r) => r.totalKm === 0 && r.totalLiters === 0) ? (
+          <p className="text-gray-400 py-4 text-center">
+            No refueling data available for the last 12 months.
+          </p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
+              <thead className="bg-gray-50 text-gray-600 text-left">
+                <tr>
+                  <th className="px-4 py-2">Month</th>
+                  <th className="px-4 py-2 text-right">Total km</th>
+                  <th className="px-4 py-2 text-right">Total liters</th>
+                  <th className="px-4 py-2 text-right">Total cost (€)</th>
+                  <th className="px-4 py-2 text-right">Avg L/100km</th>
+                  <th className="px-4 py-2 text-right">Avg €/km</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[...monthlyData].reverse().map((row) => (
+                  <tr key={row.month} className="border-t border-gray-100 hover:bg-gray-50">
+                    <td className="px-4 py-2 font-medium">{formatMonth(row.month)}</td>
+                    <td className="px-4 py-2 text-right">{row.totalKm.toLocaleString("en")} km</td>
+                    <td className="px-4 py-2 text-right">{row.totalLiters.toFixed(2)} L</td>
+                    <td className="px-4 py-2 text-right">{row.totalCost.toFixed(2)} €</td>
+                    <td className="px-4 py-2 text-right">
+                      {row.avgLitersPer100km !== null ? row.avgLitersPer100km.toFixed(2) : "N/A"}
+                    </td>
+                    <td className="px-4 py-2 text-right">
+                      {row.avgCostPerKm !== null ? row.avgCostPerKm.toFixed(2) : "N/A"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
 
       {vehicles.length === 0 ? (
         <div className="text-center py-16 text-gray-400">
