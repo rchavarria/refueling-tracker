@@ -134,19 +134,6 @@ export default function DashboardPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
-        {vehicles.length > 0 && (
-          <select
-            value={selectedId ?? ""}
-            onChange={(e) => setSelectedId(Number(e.target.value))}
-            className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            {vehicles.map((v) => (
-              <option key={v.id} value={v.id}>
-                {v.name}
-              </option>
-            ))}
-          </select>
-        )}
       </div>
 
       {/* Monthly Aggregate Table */}
@@ -193,6 +180,24 @@ export default function DashboardPage() {
           </div>
         )}
       </section>
+
+      {/* Vehicle Selector */}
+      {vehicles.length > 0 && (
+        <section className="mb-8">
+          <label className="block text-sm font-medium text-gray-700 mb-2">Select Vehicle</label>
+          <select
+            value={selectedId ?? ""}
+            onChange={(e) => setSelectedId(Number(e.target.value))}
+            className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            {vehicles.map((v) => (
+              <option key={v.id} value={v.id}>
+                {v.name}
+              </option>
+            ))}
+          </select>
+        </section>
+      )}
 
       {vehicles.length === 0 ? (
         <div className="text-center py-16 text-gray-400">
