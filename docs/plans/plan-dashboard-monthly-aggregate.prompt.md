@@ -9,12 +9,12 @@ a responsive table above the existing charts.
 
 | Step | Status | Notes |
 |------|--------|-------|
-| 1 | ⬜ Pending | Shared Zod schema for monthly aggregate |
-| 2 | ⬜ Pending | Backend aggregate service |
-| 3 | ⬜ Pending | Backend aggregate service tests |
-| 4 | ⬜ Pending | Backend controller and router |
-| 5 | ⬜ Pending | Frontend API function |
-| 6 | ⬜ Pending | Frontend table in DashboardPage |
+| 1 | ✅ Completed | Shared Zod schema for monthly aggregate |
+| 2 | ✅ Completed | Backend aggregate service |
+| 3 | ✅ Completed | Backend aggregate service tests |
+| 4 | ✅ Completed | Backend controller and router |
+| 5 | ✅ Completed | Frontend API function |
+| 6 | ✅ Completed | Frontend table in DashboardPage |
 
 **Legend**: ⬜ Pending | 🟨 In Progress | ✅ Completed
 
