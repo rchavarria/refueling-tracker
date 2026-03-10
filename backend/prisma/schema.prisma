@@ -18,6 +18,7 @@ model Vehicle {
   licensePlate String
   year         Int
   refuelings   Refueling[]
+  reminders    Reminder[]
 }
 
 model Refueling {
@@ -29,4 +30,15 @@ model Refueling {
   mileage    Int
   station    String
   vehicle    Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+}
+
+model Reminder {
+  id          Int      @id @default(autoincrement())
+  vehicleId   Int
+  date        DateTime
+  description String
+  type        String
+  mileage     Int
+  enabled     Boolean  @default(true)
+  vehicle     Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
 }
