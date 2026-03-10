@@ -9,7 +9,8 @@ async function main() {
 		process.exit(1);
 	}
 
-	// Clean tables in correct FK order: Refueling first, then Vehicle
+	// Clean tables in correct FK order: Reminder and Refueling first, then Vehicle
+	await prisma.reminder.deleteMany();
 	await prisma.refueling.deleteMany();
 	await prisma.vehicle.deleteMany();
 
@@ -95,7 +96,37 @@ async function main() {
 
 	const vehicleCount = await prisma.vehicle.count();
 	const refuelingCount = await prisma.refueling.count();
-	console.log(`Seed completed: ${vehicleCount} vehicles, ${refuelingCount} refuelings created.`);
+
+	// Seed reminders
+	const reminderData = [
+		// Family SUV reminders
+		{ vehicleId: familySuv.id, date: "2026-03-15", description: "Oil change and filter replacement", type: "maintenance", mileage: 16000, enabled: true },
+		{ vehicleId: familySuv.id, date: "2026-06-01", description: "Annual vehicle registration renewal", type: "registration", mileage: 20000, enabled: true },
+		{ vehicleId: familySuv.id, date: "2026-04-10", description: "Insurance policy renewal", type: "insurance", mileage: 17000, enabled: false },
+		// City Commuter reminders
+		{ vehicleId: cityCommuter.id, date: "2026-03-20", description: "Brake pads inspection", type: "inspection", mileage: 8000, enabled: true },
+		{ vehicleId: cityCommuter.id, date: "2026-05-15", description: "Tire rotation and alignment", type: "maintenance", mileage: 9500, enabled: true },
+		// Weekend Roadster reminders
+		{ vehicleId: weekendRoadster.id, date: "2026-03-08", description: "ITV technical inspection", type: "inspection", mileage: 12000, enabled: true },
+		{ vehicleId: weekendRoadster.id, date: "2026-04-01", description: "Windshield wiper replacement", type: "other", mileage: 12500, enabled: true },
+		{ vehicleId: weekendRoadster.id, date: "2026-07-01", description: "Insurance renewal - comprehensive", type: "insurance", mileage: 15000, enabled: false },
+	];
+
+	for (const r of reminderData) {
+		await prisma.reminder.create({
+			data: {
+				vehicleId: r.vehicleId,
+				date: new Date(r.date),
+				description: r.description,
+				type: r.type,
+				mileage: r.mileage,
+				enabled: r.enabled,
+			},
+		});
+	}
+
+	const reminderCount = await prisma.reminder.count();
+	console.log(`Seed completed: ${vehicleCount} vehicles, ${refuelingCount} refuelings, ${reminderCount} reminders created.`);
 }
 
 main()
