@@ -5,6 +5,7 @@
 
 ## Already implemented
 
+- 2026-03-10: Manage reminders (maintenance, registration, insurance, official technical inspection) with date and description, show upcoming reminders in dashboard
 - 2026-03-06: In the dashboard, show data for last 12 months, aggregate data for all vehicles:
   - Total km traveled
   - Total liters consumed
