@@ -1,0 +1,85 @@
+import type { Reminder } from "@shared/schemas/reminder.js";
+import { REMINDER_TYPE_LABELS, type ReminderType } from "@shared/schemas/reminder.js";
+import { useNavigate } from "react-router-dom";
+import { deleteReminder } from "../api/reminders";
+
+interface Props {
+  reminders: Reminder[];
+  vehicleId: number;
+}
+
+function formatDate(iso: string): string {
+  const d = new Date(iso);
+  const day = String(d.getDate()).padStart(2, "0");
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const year = d.getFullYear();
+  return `${day}/${month}/${year}`;
+}
+
+export default function ReminderList({ reminders, vehicleId }: Props) {
+  const navigate = useNavigate();
+
+  if (reminders.length === 0) {
+    return <p className="text-gray-400 py-8 text-center">No reminders recorded yet.</p>;
+  }
+
+  async function handleDelete(id: number) {
+    if (!confirm("Are you sure you want to delete this reminder?")) return;
+    await deleteReminder(id);
+    navigate(`/vehicles/${vehicleId}`);
+    navigate(0); // refresh
+  }
+
+  return (
+    <div className="overflow-x-auto">
+      <table className="min-w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
+        <thead className="bg-gray-100 text-gray-600 uppercase text-xs">
+          <tr>
+            <th className="px-4 py-3 text-left">Type</th>
+            <th className="px-4 py-3 text-left">Date</th>
+            <th className="px-4 py-3 text-left">Description</th>
+            <th className="px-4 py-3 text-right">Mileage</th>
+            <th className="px-4 py-3 text-center">Enabled</th>
+            <th className="px-4 py-3 text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-100 bg-white">
+          {reminders.map((r) => (
+            <tr key={r.id} className="hover:bg-gray-50">
+              <td className="px-4 py-3 whitespace-nowrap">
+                {REMINDER_TYPE_LABELS[r.type as ReminderType] ?? r.type}
+              </td>
+              <td className="px-4 py-3 whitespace-nowrap">{formatDate(r.date)}</td>
+              <td className="px-4 py-3">{r.description}</td>
+              <td className="px-4 py-3 text-right">{r.mileage.toLocaleString()} km</td>
+              <td className="px-4 py-3 text-center">
+                {r.enabled ? (
+                  <span className="inline-block w-3 h-3 rounded-full bg-green-500" title="Enabled" />
+                ) : (
+                  <span className="inline-block w-3 h-3 rounded-full bg-gray-300" title="Disabled" />
+                )}
+              </td>
+              <td className="px-4 py-3 text-center space-x-2">
+                <button
+                  type="button"
+                  onClick={() => navigate(`/vehicles/${vehicleId}/reminders/${r.id}/edit`)}
+                  className="text-blue-600 hover:underline text-xs font-medium"
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleDelete(r.id)}
+                  className="text-red-600 hover:underline text-xs font-medium"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+

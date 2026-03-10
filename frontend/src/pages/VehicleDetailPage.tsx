@@ -1,11 +1,14 @@
 import type { Refueling } from "@shared/schemas/refueling.js";
+import type { Reminder } from "@shared/schemas/reminder.js";
 import type { Vehicle } from "@shared/schemas/vehicle.js";
 import { calculateConsumption } from "@shared/statistics/index.js";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { fetchVehicleRefuelings } from "../api/refuelings";
+import { fetchVehicleReminders } from "../api/reminders";
 import { fetchVehicle } from "../api/vehicles";
 import RefuelingList from "../components/RefuelingList";
+import ReminderList from "../components/ReminderList";
 
 export default function VehicleDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -13,6 +16,7 @@ export default function VehicleDetailPage() {
 
   const [vehicle, setVehicle] = useState<Vehicle | null>(null);
   const [refuelings, setRefuelings] = useState<Refueling[]>([]);
+  const [reminders, setReminders] = useState<Reminder[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -23,13 +27,22 @@ export default function VehicleDetailPage() {
       return;
     }
 
-    Promise.all([fetchVehicle(vehicleId), fetchVehicleRefuelings(vehicleId)])
-      .then(([v, r]) => {
+    async function loadData() {
+      try {
+        const v = await fetchVehicle(vehicleId);
+        const r = await fetchVehicleRefuelings(vehicleId);
+        const rem = await fetchVehicleReminders(vehicleId);
         setVehicle(v);
         setRefuelings(r);
-      })
-      .catch(() => setError("Failed to load vehicle data"))
-      .finally(() => setLoading(false));
+        setReminders(rem);
+      } catch {
+        setError("Failed to load vehicle data");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadData();
   }, [vehicleId]);
 
   if (loading) return <p className="text-gray-500">Loading...</p>;
@@ -65,6 +78,19 @@ export default function VehicleDetailPage() {
       </div>
 
       <RefuelingList refuelings={refuelings} stats={stats} />
+
+      {/* Reminders Section */}
+      <div className="flex items-center justify-between mt-10 mb-4">
+        <h2 className="text-lg font-semibold text-gray-700">Reminders</h2>
+        <Link
+          to={`/vehicles/${vehicle.id}/reminders/new`}
+          className="bg-green-600 text-white px-4 py-2 rounded text-sm font-medium hover:bg-green-700"
+        >
+          + Add Reminder
+        </Link>
+      </div>
+
+      <ReminderList reminders={reminders} vehicleId={vehicle.id} />
     </div>
   );
 }

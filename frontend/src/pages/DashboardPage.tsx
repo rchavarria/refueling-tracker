@@ -1,4 +1,6 @@
 import type { Refueling } from "@shared/schemas/refueling.js";
+import type { Reminder } from "@shared/schemas/reminder.js";
+import { REMINDER_TYPE_LABELS, type ReminderType } from "@shared/schemas/reminder.js";
 import type { MonthlyAggregateRow } from "@shared/schemas/statistics.js";
 import type { Vehicle } from "@shared/schemas/vehicle.js";
 import { calculateConsumption } from "@shared/statistics/index.js";
@@ -16,6 +18,7 @@ import {
 import { useEffect, useState } from "react";
 import { Bar, Line } from "react-chartjs-2";
 import { fetchVehicleRefuelings } from "../api/refuelings";
+import { fetchUpcomingReminders } from "../api/reminders";
 import { fetchMonthlyAggregate } from "../api/statistics";
 import { fetchVehicles } from "../api/vehicles";
 
@@ -54,6 +57,9 @@ export default function DashboardPage() {
   const [monthlyData, setMonthlyData] = useState<MonthlyAggregateRow[]>([]);
   const [loadingMonthly, setLoadingMonthly] = useState(true);
   const [monthlyError, setMonthlyError] = useState<string | null>(null);
+  const [upcomingReminders, setUpcomingReminders] = useState<(Reminder & { vehicle: Vehicle })[]>([]);
+  const [loadingReminders, setLoadingReminders] = useState(true);
+  const [remindersError, setRemindersError] = useState<string | null>(null);
 
   // Load vehicle list and monthly aggregate on mount
   useEffect(() => {
@@ -68,6 +74,11 @@ export default function DashboardPage() {
       .then(setMonthlyData)
       .catch(() => setMonthlyError("Failed to load monthly statistics"))
       .finally(() => setLoadingMonthly(false));
+
+    fetchUpcomingReminders()
+      .then(setUpcomingReminders)
+      .catch(() => setRemindersError("Failed to load upcoming reminders"))
+      .finally(() => setLoadingReminders(false));
   }, []);
 
   // Load refuelings whenever selected vehicle changes
@@ -175,6 +186,57 @@ export default function DashboardPage() {
                     </td>
                   </tr>
                 ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
+
+      {/* Upcoming Reminders */}
+      <section className="mb-8">
+        <h2 className="text-lg font-semibold text-gray-700 mb-3">Upcoming Reminders</h2>
+        {loadingReminders ? (
+          <p className="text-gray-500">Loading...</p>
+        ) : remindersError ? (
+          <p className="text-red-500">{remindersError}</p>
+        ) : upcomingReminders.length === 0 ? (
+          <p className="text-gray-400 py-4 text-center">No upcoming reminders.</p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
+              <thead className="bg-gray-50 text-gray-600 text-left">
+                <tr>
+                  <th className="px-4 py-2">Vehicle</th>
+                  <th className="px-4 py-2">Type</th>
+                  <th className="px-4 py-2">Date</th>
+                  <th className="px-4 py-2">Description</th>
+                  <th className="px-4 py-2 text-right">Mileage</th>
+                </tr>
+              </thead>
+              <tbody>
+                {upcomingReminders.map((r) => {
+                  const isOverdue = new Date(r.date) < new Date(new Date().toISOString().split("T")[0]);
+                  return (
+                    <tr
+                      key={r.id}
+                      className={`border-t border-gray-100 hover:bg-gray-50 ${isOverdue ? "bg-red-50" : ""}`}
+                    >
+                      <td className="px-4 py-2 font-medium">
+                        <a href={`/vehicles/${r.vehicleId}`} className="text-blue-600 hover:underline">
+                          {r.vehicle.name}
+                        </a>
+                      </td>
+                      <td className="px-4 py-2">
+                        {REMINDER_TYPE_LABELS[r.type as ReminderType] ?? r.type}
+                      </td>
+                      <td className={`px-4 py-2 whitespace-nowrap ${isOverdue ? "text-red-600 font-medium" : ""}`}>
+                        {formatDate(r.date)}
+                      </td>
+                      <td className="px-4 py-2">{r.description}</td>
+                      <td className="px-4 py-2 text-right">{r.mileage.toLocaleString()} km</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
