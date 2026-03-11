@@ -14,3 +14,10 @@ You are building a Node.js + Express + TypeScript + Prisma backend for vehicle a
 - Write Vitest tests covering: first refueling case, multiple refuelings with correct calculations, consecutive equal mileages, decimal rounding
 - Use `prisma/seed.ts` for sample data: 2-3 vehicles with 5-7 refuelings each (Jan-Feb 2026), incremental mileage (300-800 km increments), prices 1.50-1.80 €/L
 - Configure `db:reset` script to reset + migrate + seed database
+
+## Useful commands
+
+All commands MUST be run from the root of the monorepo.
+
+- Generate Prisma client: `DATABASE_URL=./prisma/dev.db npx prisma generate --workspace=backend`
+- Seed database: `DATABASE_URL=./prisma/dev.db npm run db:seed --workspace=backend`
