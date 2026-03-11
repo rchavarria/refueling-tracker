@@ -1,6 +1,7 @@
 # Backlog
 
 - Manage reminders
+  - In order to compute vehicle mileage-based reminders, we need to store the mileage at the time of each refueling. This will allow us to calculate the distance traveled since the last refueling and set up reminders accordingly.
   - Reminders on Dashboard, color scheme based on date/mileage proximity:
     - red: within 7 days or less than 1000 km away or overdue
     - orange: between 7 and 30 days or between 1000 and 3000 km away
