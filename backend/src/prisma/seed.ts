@@ -108,25 +108,25 @@ async function main() {
 	// Last mileages per vehicle (used to set reminder mileage relative to vehicle mileage)
 	// Family SUV last mileage: 15350, City Commuter: 7400, Weekend Roadster: 11100
 	const reminderData = [
-		// --- RED cases ---
+		// --- Family SUV ---
 		// RED by date: due in 3 days (≤7 days)
-		{ vehicleId: familySuv.id,       date: daysFromNow(3),   description: "Oil change - urgent (red: due in 3 days)",             type: "maintenance", mileage: 20000, enabled: true },
-		// RED by km: 500 km left (<1000 km away)
-		{ vehicleId: familySuv.id,       date: daysFromNow(60),  description: "Tire inspection - urgent (red: 500 km away)",          type: "inspection",  mileage: 15850, enabled: true },
+		{ vehicleId: familySuv.id, date: daysFromNow(3),  description: "Oil change - urgent (red: due in 3 days)",      type: "maintenance", mileage: 20000, enabled: true },
+		// ORANGE by km: 2000 km left (1000-3000 km away), date far away
+		{ vehicleId: familySuv.id, date: daysFromNow(60), description: "Tire rotation (orange: 2000 km away)",          type: "maintenance", mileage: 17350, enabled: true },
 		// RED overdue: due 5 days ago
-		{ vehicleId: familySuv.id,       date: daysFromNow(-5),  description: "Brake fluid check - overdue (red: 5 days ago)",        type: "maintenance", mileage: 20000, enabled: true },
+		{ vehicleId: familySuv.id, date: daysFromNow(-5), description: "Brake fluid check - overdue (red: 5 days ago)", type: "maintenance", mileage: 20000, enabled: true },
 
-		// --- ORANGE cases ---
-		// ORANGE by date: due in 15 days (7-30 days)
-		{ vehicleId: cityCommuter.id,    date: daysFromNow(15),  description: "Brake pads inspection (orange: 15 days away)",         type: "inspection",  mileage: 12000, enabled: true },
-		// ORANGE by km: 2000 km left (1000-3000 km away)
-		{ vehicleId: cityCommuter.id,    date: daysFromNow(60),  description: "Air filter replacement (orange: 2000 km away)",        type: "maintenance", mileage: 9400,  enabled: true },
-
-		// --- GREEN cases ---
+		// --- City Commuter ---
 		// GREEN by date: due in 45 days (>30 days)
-		{ vehicleId: weekendRoadster.id, date: daysFromNow(45),  description: "Annual registration renewal (green: 45 days away)",   type: "registration", mileage: 20000, enabled: true },
-		// GREEN by km: 5000 km left (>3000 km away)
-		{ vehicleId: weekendRoadster.id, date: daysFromNow(60),  description: "Insurance renewal (green: 5000 km away)",             type: "insurance",   mileage: 16100, enabled: true },
+		{ vehicleId: cityCommuter.id, date: daysFromNow(45), description: "Annual registration renewal (green: 45 days away)", type: "registration", mileage: 15000, enabled: true },
+		// ORANGE by date: due in 15 days (7-30 days)
+		{ vehicleId: cityCommuter.id, date: daysFromNow(15), description: "Brake pads inspection (orange: 15 days away)",      type: "inspection",  mileage: 15000, enabled: true },
+
+		// --- Weekend Roadster ---
+		// RED by km: 500 km left (<1000 km away), date far away
+		{ vehicleId: weekendRoadster.id, date: daysFromNow(60), description: "Tire inspection - urgent (red: 500 km away)",          type: "inspection",  mileage: 11600, enabled: true },
+		// GREEN by date and km: 45 days away and 5000 km away
+		{ vehicleId: weekendRoadster.id, date: daysFromNow(45), description: "Insurance renewal (green: 45 days and 5000 km away)", type: "insurance",   mileage: 16100, enabled: true },
 	];
 
 	for (const r of reminderData) {
