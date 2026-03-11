@@ -2,6 +2,7 @@
 
 - Manage reminders
   - In order to compute vehicle mileage-based reminders, we need to store the mileage at the time of each refueling. This will allow us to calculate the distance traveled since the last refueling and set up reminders accordingly.
+  - Reminders first on Vehicle Detail Page, then the list of refuelings
 - Manage maintenance records for vehicles (date, description, cost), show in vehicle detail page, calculate total maintenance cost per vehicle
 
 ## Already implemented
