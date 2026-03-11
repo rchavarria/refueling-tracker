@@ -98,18 +98,35 @@ async function main() {
 	const refuelingCount = await prisma.refueling.count();
 
 	// Seed reminders
+	// Helper: date offset from today
+	function daysFromNow(days: number): Date {
+		const d = new Date();
+		d.setDate(d.getDate() + days);
+		return d;
+	}
+
+	// Last mileages per vehicle (used to set reminder mileage relative to vehicle mileage)
+	// Family SUV last mileage: 15350, City Commuter: 7400, Weekend Roadster: 11100
 	const reminderData = [
-		// Family SUV reminders
-		{ vehicleId: familySuv.id, date: "2026-03-15", description: "Oil change and filter replacement", type: "maintenance", mileage: 16000, enabled: true },
-		{ vehicleId: familySuv.id, date: "2026-06-01", description: "Annual vehicle registration renewal", type: "registration", mileage: 20000, enabled: true },
-		{ vehicleId: familySuv.id, date: "2026-04-10", description: "Insurance policy renewal", type: "insurance", mileage: 17000, enabled: false },
-		// City Commuter reminders
-		{ vehicleId: cityCommuter.id, date: "2026-03-20", description: "Brake pads inspection", type: "inspection", mileage: 8000, enabled: true },
-		{ vehicleId: cityCommuter.id, date: "2026-05-15", description: "Tire rotation and alignment", type: "maintenance", mileage: 9500, enabled: true },
-		// Weekend Roadster reminders
-		{ vehicleId: weekendRoadster.id, date: "2026-03-08", description: "ITV technical inspection", type: "inspection", mileage: 12000, enabled: true },
-		{ vehicleId: weekendRoadster.id, date: "2026-04-01", description: "Windshield wiper replacement", type: "other", mileage: 12500, enabled: true },
-		{ vehicleId: weekendRoadster.id, date: "2026-07-01", description: "Insurance renewal - comprehensive", type: "insurance", mileage: 15000, enabled: false },
+		// --- RED cases ---
+		// RED by date: due in 3 days (≤7 days)
+		{ vehicleId: familySuv.id,       date: daysFromNow(3),   description: "Oil change - urgent (red: due in 3 days)",             type: "maintenance", mileage: 20000, enabled: true },
+		// RED by km: 500 km left (<1000 km away)
+		{ vehicleId: familySuv.id,       date: daysFromNow(60),  description: "Tire inspection - urgent (red: 500 km away)",          type: "inspection",  mileage: 15850, enabled: true },
+		// RED overdue: due 5 days ago
+		{ vehicleId: familySuv.id,       date: daysFromNow(-5),  description: "Brake fluid check - overdue (red: 5 days ago)",        type: "maintenance", mileage: 20000, enabled: true },
+
+		// --- ORANGE cases ---
+		// ORANGE by date: due in 15 days (7-30 days)
+		{ vehicleId: cityCommuter.id,    date: daysFromNow(15),  description: "Brake pads inspection (orange: 15 days away)",         type: "inspection",  mileage: 12000, enabled: true },
+		// ORANGE by km: 2000 km left (1000-3000 km away)
+		{ vehicleId: cityCommuter.id,    date: daysFromNow(60),  description: "Air filter replacement (orange: 2000 km away)",        type: "maintenance", mileage: 9400,  enabled: true },
+
+		// --- GREEN cases ---
+		// GREEN by date: due in 45 days (>30 days)
+		{ vehicleId: weekendRoadster.id, date: daysFromNow(45),  description: "Annual registration renewal (green: 45 days away)",   type: "registration", mileage: 20000, enabled: true },
+		// GREEN by km: 5000 km left (>3000 km away)
+		{ vehicleId: weekendRoadster.id, date: daysFromNow(60),  description: "Insurance renewal (green: 5000 km away)",             type: "insurance",   mileage: 16100, enabled: true },
 	];
 
 	for (const r of reminderData) {
