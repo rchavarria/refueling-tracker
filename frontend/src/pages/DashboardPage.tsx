@@ -48,6 +48,44 @@ function formatMonth(month: string): string {
   return `${MONTH_NAMES[Number(m) - 1]} ${year}`;
 }
 
+type ReminderColor = "red" | "orange" | "green";
+
+function getReminderColor(reminder: Reminder & { vehicle: Vehicle }): ReminderColor {
+  const today = new Date(new Date().toISOString().split("T")[0]);
+  const dueDate = new Date(reminder.date);
+  const diffDays = Math.ceil((dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
+  let colorByDate: ReminderColor;
+  if (diffDays <= 7) colorByDate = "red";
+  else if (diffDays <= 30) colorByDate = "orange";
+  else colorByDate = "green";
+
+  const currentMileage = reminder.vehicle.mileage ?? null;
+  let colorByKm: ReminderColor | null = null;
+  if (currentMileage !== null && reminder.mileage !== null) {
+    const kmLeft = reminder.mileage - currentMileage;
+    if (kmLeft < 1000) colorByKm = "red";
+    else if (kmLeft <= 3000) colorByKm = "orange";
+    else colorByKm = "green";
+  }
+
+  const priority: ReminderColor[] = ["red", "orange", "green"];
+  const colors = [colorByDate, colorByKm].filter((c): c is ReminderColor => c !== null);
+  return priority.find((p) => colors.includes(p)) ?? "green";
+}
+
+const REMINDER_ROW_CLASSES: Record<ReminderColor, string> = {
+  red: "bg-red-50",
+  orange: "bg-orange-50",
+  green: "bg-green-50",
+};
+
+const REMINDER_BADGE_CLASSES: Record<ReminderColor, string> = {
+  red: "inline-block w-2.5 h-2.5 rounded-full bg-red-500 mr-2",
+  orange: "inline-block w-2.5 h-2.5 rounded-full bg-orange-400 mr-2",
+  green: "inline-block w-2.5 h-2.5 rounded-full bg-green-500 mr-2",
+};
+
 export default function DashboardPage() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -215,11 +253,11 @@ export default function DashboardPage() {
               </thead>
               <tbody>
                 {upcomingReminders.map((r) => {
-                  const isOverdue = new Date(r.date) < new Date(new Date().toISOString().split("T")[0]);
+                  const color = getReminderColor(r);
                   return (
                     <tr
                       key={r.id}
-                      className={`border-t border-gray-100 hover:bg-gray-50 ${isOverdue ? "bg-red-50" : ""}`}
+                      className={`border-t border-gray-100 hover:brightness-95 ${REMINDER_ROW_CLASSES[color]}`}
                     >
                       <td className="px-4 py-2 font-medium">
                         <a href={`/vehicles/${r.vehicleId}`} className="text-blue-600 hover:underline">
@@ -229,7 +267,8 @@ export default function DashboardPage() {
                       <td className="px-4 py-2">
                         {REMINDER_TYPE_LABELS[r.type as ReminderType] ?? r.type}
                       </td>
-                      <td className={`px-4 py-2 whitespace-nowrap ${isOverdue ? "text-red-600 font-medium" : ""}`}>
+                      <td className="px-4 py-2 whitespace-nowrap">
+                        <span className={REMINDER_BADGE_CLASSES[color]} aria-hidden="true" />
                         {formatDate(r.date)}
                       </td>
                       <td className="px-4 py-2">{r.description}</td>
