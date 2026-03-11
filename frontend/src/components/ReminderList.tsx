@@ -63,16 +63,18 @@ export default function ReminderList({ reminders, vehicleId }: Props) {
                 <button
                   type="button"
                   onClick={() => navigate(`/vehicles/${vehicleId}/reminders/${r.id}/edit`)}
-                  className="text-blue-600 hover:underline text-xs font-medium"
+                  className="inline-flex items-center justify-center px-3 py-1 bg-blue-600 text-white text-xs font-medium rounded hover:bg-blue-700 cursor-pointer"
+                  title="Edit"
                 >
-                  Edit
+                  ✏️
                 </button>
                 <button
                   type="button"
                   onClick={() => handleDelete(r.id)}
-                  className="text-red-600 hover:underline text-xs font-medium"
+                  className="inline-flex items-center justify-center px-3 py-1 bg-red-600 text-white text-xs font-medium rounded hover:bg-red-700 cursor-pointer"
+                  title="Delete"
                 >
-                  Delete
+                  🗑️
                 </button>
               </td>
             </tr>
@@ -82,4 +84,3 @@ export default function ReminderList({ reminders, vehicleId }: Props) {
     </div>
   );
 }
-
