@@ -1,12 +1,13 @@
 # Backlog
 
 - Manage reminders
-  - In order to compute vehicle mileage-based reminders, we need to store the mileage at the time of each refueling. This will allow us to calculate the distance traveled since the last refueling and set up reminders accordingly.
   - Reminders first on Vehicle Detail Page, then the list of refuelings
 - Manage maintenance records for vehicles (date, description, cost), show in vehicle detail page, calculate total maintenance cost per vehicle
 
 ## Already implemented
 
+- 2026-03-12: Manage reminders
+  - `currentMileage` as a derived property of `Vehicle` — every endpoint returning a vehicle now includes `currentMileage: number | null` (max mileage from refuelings). Dashboard reminder colors now use real km distance instead of hardcoded null.
 - 2026-03-11: Manage reminders
   - Reminders on Dashboard, color scheme based on date/mileage proximity:
     - red: within 7 days or less than 1000 km away or overdue
