@@ -19,5 +19,7 @@ You are building a Node.js + Express + TypeScript + Prisma backend for vehicle a
 
 All commands MUST be run from the root of the monorepo.
 
+- Check for compiler errors: `npm run build --workspace=backend`
 - Generate Prisma client: `DATABASE_URL=./prisma/dev.db npx prisma generate --workspace=backend`
 - Seed database: `DATABASE_URL=./prisma/dev.db npm run db:seed --workspace=backend`
+- Execute unit tests: `npm run test --workspace=backend` 

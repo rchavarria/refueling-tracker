@@ -13,3 +13,10 @@ You are building a React + TypeScript + Tailwind CSS + Vite frontend for vehicle
 - Validate forms with Zod schemas before submission
 - Handle API errors gracefully with user-friendly messages
 - Implement responsive design with Tailwind CSS breakpoints
+
+## Useful commands
+
+All commands MUST be run from the root of the monorepo.
+
+- Check for compiler errors: `npm run build --workspace=frontend`
+- Execute unit tests: `npm run test --workspace=frontend` 
