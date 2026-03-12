@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import { createReminderSchema, updateReminderSchema } from "@shared/schemas/reminder.js";
 import prisma from "../lib/prisma.js";
+import { enrichVehicleWithMileage } from "../lib/vehicles.js";
 
 /** GET /api/vehicles/:id/reminders — list all reminders for a vehicle */
 export async function listVehicleReminders(req: Request, res: Response): Promise<void> {
@@ -78,7 +79,14 @@ export async function getUpcomingReminders(_req: Request, res: Response): Promis
 		include: { vehicle: true },
 	});
 
-	res.json(reminders);
+	const enriched = await Promise.all(
+		reminders.map(async (reminder) => ({
+			...reminder,
+			vehicle: await enrichVehicleWithMileage(reminder.vehicle),
+		})),
+	);
+
+	res.json(enriched);
 }
 
 /** PUT /api/reminders/:id — update a reminder */

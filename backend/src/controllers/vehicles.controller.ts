@@ -2,13 +2,15 @@ import type { Request, Response } from "express";
 import { createVehicleSchema, updateVehicleSchema } from "@shared/schemas/vehicle.js";
 import { createRefuelingSchema } from "@shared/schemas/refueling.js";
 import prisma from "../lib/prisma.js";
+import { enrichVehicleWithMileage } from "../lib/vehicles.js";
 
 /** GET /api/vehicles — list all vehicles */
 export async function listVehicles(_req: Request, res: Response): Promise<void> {
 	const vehicles = await prisma.vehicle.findMany({
 		orderBy: { name: "asc" },
 	});
-	res.json(vehicles);
+	const enriched = await Promise.all(vehicles.map(enrichVehicleWithMileage));
+	res.json(enriched);
 }
 
 /** GET /api/vehicles/:id — get a single vehicle */
@@ -27,7 +29,7 @@ export async function getVehicle(req: Request, res: Response): Promise<void> {
 		return;
 	}
 
-	res.json(vehicle);
+	res.json(await enrichVehicleWithMileage(vehicle));
 }
 
 /** POST /api/vehicles — create a vehicle (validates name uniqueness) */
@@ -41,7 +43,7 @@ export async function createVehicle(req: Request, res: Response): Promise<void> 
 
 	try {
 		const vehicle = await prisma.vehicle.create({ data: parsed.data });
-		res.status(201).json(vehicle);
+		res.status(201).json({ ...vehicle, currentMileage: null });
 	} catch (err: unknown) {
 		// Prisma unique constraint violation
 		if (isPrismaUniqueConstraintError(err)) {
@@ -73,7 +75,7 @@ export async function updateVehicle(req: Request, res: Response): Promise<void> 
 			where: { id },
 			data: parsed.data,
 		});
-		res.json(vehicle);
+		res.json({ ...vehicle, currentMileage: null });
 	} catch (err: unknown) {
 		if (isPrismaRecordNotFoundError(err)) {
 			res.status(404).json({ error: "Vehicle not found" });
