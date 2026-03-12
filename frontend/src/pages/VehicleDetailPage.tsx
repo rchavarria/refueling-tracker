@@ -59,6 +59,17 @@ export default function VehicleDetailPage() {
 
   return (
     <div>
+      <div>
+        <Link to="/vehicles" className="text-sm text-blue-500 hover:underline">
+          ← Vehicles
+        </Link>
+
+        <h1 className="text-2xl font-bold text-gray-800 mt-1">{vehicle.name}</h1>
+        <p className="text-sm text-gray-500">
+          {vehicle.brand} {vehicle.model} · {vehicle.year} · {vehicle.licensePlate}
+        </p>
+      </div>
+
       {/* Reminders Section */}
       <div className="flex items-center justify-between mt-10 mb-4">
         <h2 className="text-lg font-semibold text-gray-700">Reminders</h2>
@@ -74,15 +85,8 @@ export default function VehicleDetailPage() {
 
       {/* Refuelings Section */}
       <div className="flex items-center justify-between mb-6">
-        <div>
-          <Link to="/vehicles" className="text-sm text-blue-500 hover:underline">
-            ← Vehicles
-          </Link>
-          <h1 className="text-2xl font-bold text-gray-800 mt-1">{vehicle.name}</h1>
-          <p className="text-sm text-gray-500">
-            {vehicle.brand} {vehicle.model} · {vehicle.year} · {vehicle.licensePlate}
-          </p>
-        </div>
+        <h2 className="text-lg font-semibold text-gray-700">Refuelings</h2>
+
         <Link
           to={`/vehicles/${vehicle.id}/refuelings/new`}
           className="bg-blue-600 text-white px-4 py-2 rounded text-sm font-medium hover:bg-blue-700"
