@@ -2,6 +2,7 @@
 
 - Manage reminders
   - Reminders first on Vehicle Detail Page, then the list of refuelings
+  - Tooltip on Dashboard about the color scheme for reminders (red, orange, green)
 - Manage maintenance records for vehicles (date, description, cost), show in vehicle detail page, calculate total maintenance cost per vehicle
 
 ## Already implemented
