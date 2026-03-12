@@ -60,9 +60,7 @@ function getReminderColor(reminder: Reminder & { vehicle: Vehicle }): ReminderCo
   else if (diffDays <= 30) colorByDate = "orange";
   else colorByDate = "green";
 
-  // TODO need to fetch current mileage for each vehicle to compute this, or include it in the reminder query
-  // const currentMileage = reminder.vehicle.mileage ?? null;
-  const currentMileage = null;
+  const currentMileage = reminder.vehicle.currentMileage;
   let colorByKm: ReminderColor | null = null;
   if (currentMileage !== null && reminder.mileage !== null) {
     const kmLeft = reminder.mileage - currentMileage;
