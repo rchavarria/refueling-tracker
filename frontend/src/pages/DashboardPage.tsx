@@ -21,6 +21,7 @@ import { fetchVehicleRefuelings } from "../api/refuelings";
 import { fetchUpcomingReminders } from "../api/reminders";
 import { fetchMonthlyAggregate } from "../api/statistics";
 import { fetchVehicles } from "../api/vehicles";
+import ReminderColorTooltip from "../components/ReminderColorTooltip";
 
 ChartJS.register(
   CategoryScale,
@@ -232,7 +233,10 @@ export default function DashboardPage() {
 
       {/* Upcoming Reminders */}
       <section className="mb-8">
-        <h2 className="text-lg font-semibold text-gray-700 mb-3">Upcoming Reminders</h2>
+        <h2 className="text-lg font-semibold text-gray-700 mb-3 flex items-center gap-2">
+          Upcoming Reminders
+          <ReminderColorTooltip />
+        </h2>
         {loadingReminders ? (
           <p className="text-gray-500">Loading...</p>
         ) : remindersError ? (
