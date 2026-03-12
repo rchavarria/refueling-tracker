@@ -1,12 +1,13 @@
 # Backlog
 
 - Manage reminders
-  - Reminders first on Vehicle Detail Page, then the list of refuelings
   - Tooltip on Dashboard about the color scheme for reminders (red, orange, green)
 - Manage maintenance records for vehicles (date, description, cost), show in vehicle detail page, calculate total maintenance cost per vehicle
 
 ## Already implemented
 
+- 2026-03-12: Manage reminders
+  - Reminders first on Vehicle Detail Page, then the list of refuelings
 - 2026-03-12: Manage reminders
   - `currentMileage` as a derived property of `Vehicle` — every endpoint returning a vehicle now includes `currentMileage: number | null` (max mileage from refuelings). Dashboard reminder colors now use real km distance instead of hardcoded null.
 - 2026-03-11: Manage reminders
