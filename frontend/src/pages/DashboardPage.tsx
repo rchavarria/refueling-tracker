@@ -9,16 +9,10 @@ export default function DashboardPage() {
         <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
       </div>
 
-      {/* Monthly Aggregate Table */}
-      <section className="mb-8">
-        <h2 className="text-lg font-semibold text-gray-700 mb-3">Last 12 Months</h2>
-        <MonthlyAggregateTable />
-      </section>
+      <MonthlyAggregateTable />
 
-      {/* Upcoming Reminders */}
       <UpcomingReminders />
 
-      {/* Vehicle Charts */}
       <VehicleCharts />
     </div>
   );

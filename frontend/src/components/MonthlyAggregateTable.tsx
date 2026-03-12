@@ -32,7 +32,10 @@ export default function MonthlyAggregateTable() {
   }
 
   return (
-    <div className="overflow-x-auto">
+    <section className="mb-8">
+      <h2 className="text-lg font-semibold text-gray-700 mb-3">Last 12 Months</h2>
+
+      <div className="overflow-x-auto">
       <table className="w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
         <thead className="bg-gray-50 text-gray-600 text-left">
           <tr>
@@ -62,5 +65,6 @@ export default function MonthlyAggregateTable() {
         </tbody>
       </table>
     </div>
+    </section>
   );
 }
