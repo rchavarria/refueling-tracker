@@ -12,9 +12,10 @@ export const createVehicleSchema = z.object({
 /** Partial version for PATCH requests */
 export const updateVehicleSchema = createVehicleSchema.partial();
 
-/** Full vehicle as returned by the API (includes id) */
+/** Full vehicle as returned by the API (includes id and derived currentMileage) */
 export const vehicleSchema = createVehicleSchema.extend({
   id: z.number().int(),
+  currentMileage: z.number().int().nullable(),
 });
 
 export type CreateVehicle = z.infer<typeof createVehicleSchema>;
