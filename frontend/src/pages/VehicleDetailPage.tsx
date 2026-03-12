@@ -59,6 +59,20 @@ export default function VehicleDetailPage() {
 
   return (
     <div>
+      {/* Reminders Section */}
+      <div className="flex items-center justify-between mt-10 mb-4">
+        <h2 className="text-lg font-semibold text-gray-700">Reminders</h2>
+        <Link
+          to={`/vehicles/${vehicle.id}/reminders/new`}
+          className="bg-green-600 text-white px-4 py-2 rounded text-sm font-medium hover:bg-green-700"
+        >
+          + Add Reminder
+        </Link>
+      </div>
+
+      <ReminderList reminders={reminders} vehicleId={vehicle.id} />
+
+      {/* Refuelings Section */}
       <div className="flex items-center justify-between mb-6">
         <div>
           <Link to="/vehicles" className="text-sm text-blue-500 hover:underline">
@@ -78,20 +92,6 @@ export default function VehicleDetailPage() {
       </div>
 
       <RefuelingList refuelings={refuelings} stats={stats} />
-
-      {/* Reminders Section */}
-      <div className="flex items-center justify-between mt-10 mb-4">
-        <h2 className="text-lg font-semibold text-gray-700">Reminders</h2>
-        <Link
-          to={`/vehicles/${vehicle.id}/reminders/new`}
-          className="bg-green-600 text-white px-4 py-2 rounded text-sm font-medium hover:bg-green-700"
-        >
-          + Add Reminder
-        </Link>
-      </div>
-
-      <ReminderList reminders={reminders} vehicleId={vehicle.id} />
     </div>
   );
 }
-
