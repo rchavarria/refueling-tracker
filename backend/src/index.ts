@@ -5,6 +5,7 @@ import vehiclesRouter from "./routes/vehicles.router.js";
 import refuelingsRouter from "./routes/refuelings.router.js";
 import statisticsRouter from "./routes/statistics.router.js";
 import { vehicleRemindersRouter, remindersRouter } from "./routes/reminders.router.js";
+import { vehicleMaintenancesRouter, maintenancesRouter } from "./routes/maintenances.router.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,8 +19,10 @@ app.get("/api/health", (_req: Request, res: Response) => {
 
 app.use("/api/vehicles", vehiclesRouter);
 app.use("/api/vehicles", vehicleRemindersRouter);
+app.use("/api/vehicles", vehicleMaintenancesRouter);
 app.use("/api/refuelings", refuelingsRouter);
 app.use("/api/reminders", remindersRouter);
+app.use("/api/maintenances", maintenancesRouter);
 app.use("/api/statistics", statisticsRouter);
 
 const server = app.listen(PORT, () => {

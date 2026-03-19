@@ -11,14 +11,15 @@ datasource db {
 }
 
 model Vehicle {
-  id           Int         @id @default(autoincrement())
-  name         String      @unique
+  id           Int           @id @default(autoincrement())
+  name         String        @unique
   brand        String
   model        String
   licensePlate String
   year         Int
   refuelings   Refueling[]
   reminders    Reminder[]
+  maintenances Maintenance[]
 }
 
 model Refueling {
@@ -40,5 +41,16 @@ model Reminder {
   type        String
   mileage     Int
   enabled     Boolean  @default(true)
+  vehicle     Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+}
+
+model Maintenance {
+  id          Int      @id @default(autoincrement())
+  vehicleId   Int
+  date        DateTime
+  type        String
+  description String
+  mileage     Int
+  cost        Float
   vehicle     Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
 }
