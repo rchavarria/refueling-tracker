@@ -1,6 +1,6 @@
 # Backlog
 
-- Manage maintenance records for vehicles (date, description, cost), show in vehicle detail page, calculate total maintenance cost per vehicle
+- Manage maintenance records for vehicles (type, date, description, cost), show in vehicle detail page
 
 ## Already implemented
 
