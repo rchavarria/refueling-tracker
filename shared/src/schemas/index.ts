@@ -1,4 +1,5 @@
 export * from "./vehicle";
 export * from "./refueling";
 export * from "./reminder";
+export * from "./maintenance";
 export * from "./statistics";
