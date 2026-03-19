@@ -9,7 +9,8 @@ async function main() {
 		process.exit(1);
 	}
 
-	// Clean tables in correct FK order: Reminder and Refueling first, then Vehicle
+	// Clean tables in correct FK order: dependent tables first, then Vehicle
+	await prisma.maintenance.deleteMany();
 	await prisma.reminder.deleteMany();
 	await prisma.refueling.deleteMany();
 	await prisma.vehicle.deleteMany();
@@ -143,7 +144,43 @@ async function main() {
 	}
 
 	const reminderCount = await prisma.reminder.count();
-	console.log(`Seed completed: ${vehicleCount} vehicles, ${refuelingCount} refuelings, ${reminderCount} reminders created.`);
+
+	// Seed maintenances
+	const maintenanceData = [
+		// --- Family SUV (3 maintenances) ---
+		{ vehicleId: familySuv.id, date: "2025-09-15", type: "Oil",     description: "Full synthetic oil change at 10000 km",   mileage: 10000, cost: 89.50 },
+		{ vehicleId: familySuv.id, date: "2025-11-20", type: "ITV",     description: "Annual ITV inspection passed",            mileage: 11200, cost: 45.00 },
+		{ vehicleId: familySuv.id, date: "2026-01-10", type: "Wheels",  description: "Winter tyre rotation and balancing",      mileage: 12200, cost: 60.00 },
+
+		// --- City Commuter (4 maintenances) ---
+		{ vehicleId: cityCommuter.id, date: "2025-08-05", type: "Oil",     description: "First oil change at 3000 km",             mileage: 3000, cost: 75.00 },
+		{ vehicleId: cityCommuter.id, date: "2025-10-12", type: "Brakes",  description: "Front brake pads replacement",            mileage: 4200, cost: 180.00 },
+		{ vehicleId: cityCommuter.id, date: "2025-12-01", type: "Lights",  description: "Left headlight bulb replacement",         mileage: 5000, cost: 25.00 },
+		{ vehicleId: cityCommuter.id, date: "2026-02-08", type: "ITV",     description: "Annual ITV inspection passed with notes", mileage: 6600, cost: 45.00 },
+
+		// --- Weekend Roadster (5 maintenances) ---
+		{ vehicleId: weekendRoadster.id, date: "2025-06-10", type: "Oil",     description: "Synthetic oil and filter change",         mileage: 7000, cost: 95.00 },
+		{ vehicleId: weekendRoadster.id, date: "2025-08-22", type: "Wheels",  description: "New summer tyres installed (4 units)",    mileage: 7800, cost: 420.00 },
+		{ vehicleId: weekendRoadster.id, date: "2025-10-05", type: "Brakes",  description: "Rear brake discs and pads replacement",  mileage: 8300, cost: 310.00 },
+		{ vehicleId: weekendRoadster.id, date: "2025-12-18", type: "AdBlue",  description: "AdBlue tank refill (10L)",               mileage: 9500, cost: 15.00 },
+		{ vehicleId: weekendRoadster.id, date: "2026-02-14", type: "Repair",  description: "Exhaust pipe bracket weld repair",       mileage: 10800, cost: 135.00 },
+	];
+
+	for (const m of maintenanceData) {
+		await prisma.maintenance.create({
+			data: {
+				vehicleId: m.vehicleId,
+				date: new Date(m.date),
+				type: m.type,
+				description: m.description,
+				mileage: m.mileage,
+				cost: m.cost,
+			},
+		});
+	}
+
+	const maintenanceCount = await prisma.maintenance.count();
+	console.log(`Seed completed: ${vehicleCount} vehicles, ${refuelingCount} refuelings, ${reminderCount} reminders, ${maintenanceCount} maintenances created.`);
 }
 
 main()
