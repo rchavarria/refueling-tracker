@@ -1,9 +1,10 @@
 # Backlog
 
-- Manage maintenance records for vehicles (type, date, description, cost), show in vehicle detail page
+(empty)
 
 ## Already implemented
 
+- 2026-03-19: Manage maintenance records for vehicles (type, date, mileage, description, cost), show in vehicle detail page
 - 2026-03-12: Manage reminders
   - Tooltip on Dashboard about the color scheme for reminders (red, orange, green)
   - Reminders first on Vehicle Detail Page, then the list of refuelings
