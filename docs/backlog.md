@@ -1,6 +1,13 @@
 # Backlog
 
-(empty)
+- refueling list by vehicle: sort by date desc
+- refueling list by vehicle: remove column €/km
+- refueling list by vehicle: show just the last 10 refuelings, 
+  with a "Show all" button that expands the list to show all refuelings for that vehicle
+- dashboard: show a graph of km traveled per month for the last 12 months, as a stacked 
+  line graph with one line per vehicle, and a total line
+- maintenances and reminders tables: limit description column width to leave space for
+  other columns, trim with ellipsis, and add a tooltip to show the full description on hover
 
 ## Already implemented
 
