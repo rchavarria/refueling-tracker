@@ -1,7 +1,9 @@
 import type { MonthlyKmPerVehicleResponse } from "@shared/schemas/statistics.js";
+import type { ChartOptions } from "chart.js";
 import {
   CategoryScale,
   Chart as ChartJS,
+  Filler,
   Legend,
   LineElement,
   LinearScale,
@@ -13,7 +15,7 @@ import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import { fetchMonthlyKmPerVehicle } from "../api/statistics";
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
 const MONTH_NAMES = [
   "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -31,6 +33,11 @@ const VEHICLE_COLORS = [
   "rgb(14, 165, 233)",   // sky
   "rgb(168, 85, 247)",   // purple
 ];
+
+/** Convert "rgb(r, g, b)" to "rgba(r, g, b, alpha)" */
+function withAlpha(rgb: string, alpha: number): string {
+  return rgb.replace("rgb(", "rgba(").replace(")", `, ${alpha})`);
+}
 
 function formatMonth(month: string): string {
   const [year, m] = month.split("-");
@@ -61,40 +68,35 @@ export default function MonthlyKmChart() {
 
   const labels = data.rows.map((r) => formatMonth(r.month));
 
-  // One dataset per vehicle
+  // One dataset per vehicle (stacked area)
   const vehicleDatasets = data.vehicles.map((name, idx) => ({
     label: name,
     data: data.rows.map((r) => r.vehicleKm[idx]),
     borderColor: VEHICLE_COLORS[idx % VEHICLE_COLORS.length],
-    backgroundColor: VEHICLE_COLORS[idx % VEHICLE_COLORS.length],
+    backgroundColor: withAlpha(VEHICLE_COLORS[idx % VEHICLE_COLORS.length], 0.3),
+    fill: true,
     tension: 0.3,
     pointRadius: 3,
   }));
 
-  // Total line — dashed, thicker, dark gray
-  const totalDataset = {
-    label: "Total",
-    data: data.rows.map((r) => r.totalKm),
-    borderColor: "rgb(55, 65, 81)",
-    backgroundColor: "rgb(55, 65, 81)",
-    borderDash: [6, 3],
-    borderWidth: 2.5,
-    tension: 0.3,
-    pointRadius: 3,
-  };
-
   const chartData = {
     labels,
-    datasets: [...vehicleDatasets, totalDataset],
+    datasets: vehicleDatasets,
   };
 
-  const options = {
+  const options: ChartOptions<"line"> = {
     responsive: true,
     plugins: {
       legend: { position: "top" as const },
+      tooltip: {
+        mode: "index" as const,
+        intersect: false,
+      },
     },
     scales: {
+      x: { stacked: true },
       y: {
+        stacked: true,
         beginAtZero: true,
         title: { display: true, text: "km" },
       },

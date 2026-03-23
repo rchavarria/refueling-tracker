@@ -1,7 +1,5 @@
 # Backlog
 
-- dashboard: show a graph of km traveled per month for the last 12 months, as a stacked 
-  line graph with one line per vehicle, and a total line
 - maintenances and reminders tables: limit description column width to leave space for
   other columns, trim with ellipsis, and add a tooltip to show the full description on hover
 - dashboard: remove graphs by vehicle, at least the one with €/km
@@ -9,6 +7,8 @@
 
 ## Already implemented
 
+- 2026-03-23: dashboard: show a graph of km traveled per month for the last 12 months, as a stacked 
+  line graph with one line per vehicle, and a total line
 - 2026-03-23: Refueling list by vehicle: sort by date descending (newest first), remove €/km column, show last 10 with "Show all" toggle
 - 2026-03-19: Manage maintenance records for vehicles (type, date, mileage, description, cost), show in vehicle detail page
 - 2026-03-12: Manage reminders
