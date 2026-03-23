@@ -6,6 +6,8 @@
   line graph with one line per vehicle, and a total line
 - maintenances and reminders tables: limit description column width to leave space for
   other columns, trim with ellipsis, and add a tooltip to show the full description on hover
+- dashboard: remove graphs by vehicle, at least the one with €/km
+- dashboard: similarly to the mileage graph, with stacked lines, do the same for L/100km
 
 ## Already implemented
 
