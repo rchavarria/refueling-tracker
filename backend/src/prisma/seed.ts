@@ -47,33 +47,36 @@ async function main() {
 	});
 
 	// Refuelings for Family SUV (7 entries, starting at 12000 km)
+	// Intervals: 7, 8, 8, 7, 7, 7 days — last refueling 2 days ago
 	const suvRefuelings = [
-		{ date: "2026-01-05", liters: 45.2, pricePerLiter: 1.62, mileage: 12000, station: "Repsol A-6 km 12" },
-		{ date: "2026-01-12", liters: 42.8, pricePerLiter: 1.58, mileage: 12450, station: "Cepsa Gran Vía" },
-		{ date: "2026-01-20", liters: 50.1, pricePerLiter: 1.65, mileage: 13050, station: "BP Alcobendas" },
-		{ date: "2026-01-28", liters: 38.5, pricePerLiter: 1.70, mileage: 13400, station: "Repsol A-6 km 12" },
-		{ date: "2026-02-04", liters: 47.3, pricePerLiter: 1.55, mileage: 14100, station: "Shell M-40 Sur" },
-		{ date: "2026-02-11", liters: 44.0, pricePerLiter: 1.72, mileage: 14600, station: "Cepsa Gran Vía" },
-		{ date: "2026-02-18", liters: 51.5, pricePerLiter: 1.68, mileage: 15350, station: "BP Alcobendas" },
+		{ date: daysFromNow(-46), liters: 45.2, pricePerLiter: 1.62, mileage: 12000, station: "Repsol A-6 km 12" },
+		{ date: daysFromNow(-39), liters: 42.8, pricePerLiter: 1.58, mileage: 12450, station: "Cepsa Gran Vía" },
+		{ date: daysFromNow(-31), liters: 50.1, pricePerLiter: 1.65, mileage: 13050, station: "BP Alcobendas" },
+		{ date: daysFromNow(-23), liters: 38.5, pricePerLiter: 1.70, mileage: 13400, station: "Repsol A-6 km 12" },
+		{ date: daysFromNow(-16), liters: 47.3, pricePerLiter: 1.55, mileage: 14100, station: "Shell M-40 Sur" },
+		{ date: daysFromNow(-9),  liters: 44.0, pricePerLiter: 1.72, mileage: 14600, station: "Cepsa Gran Vía" },
+		{ date: daysFromNow(-2),  liters: 51.5, pricePerLiter: 1.68, mileage: 15350, station: "BP Alcobendas" },
 	];
 
 	// Refuelings for City Commuter (6 entries, starting at 5200 km)
+	// Intervals: 11, 11, 9, 9, 7 days — last refueling 3 days ago
 	const cityRefuelings = [
-		{ date: "2026-01-03", liters: 32.0, pricePerLiter: 1.60, mileage: 5200, station: "Repsol Centro" },
-		{ date: "2026-01-14", liters: 28.5, pricePerLiter: 1.63, mileage: 5530, station: "Cepsa Arturo Soria" },
-		{ date: "2026-01-25", liters: 35.2, pricePerLiter: 1.57, mileage: 6100, station: "Shell Castellana" },
-		{ date: "2026-02-03", liters: 30.0, pricePerLiter: 1.75, mileage: 6480, station: "BP Chamartín" },
-		{ date: "2026-02-12", liters: 33.8, pricePerLiter: 1.68, mileage: 7050, station: "Repsol Centro" },
-		{ date: "2026-02-19", liters: 29.5, pricePerLiter: 1.80, mileage: 7400, station: "Cepsa Arturo Soria" },
+		{ date: daysFromNow(-50), liters: 32.0, pricePerLiter: 1.60, mileage: 5200, station: "Repsol Centro" },
+		{ date: daysFromNow(-39), liters: 28.5, pricePerLiter: 1.63, mileage: 5530, station: "Cepsa Arturo Soria" },
+		{ date: daysFromNow(-28), liters: 35.2, pricePerLiter: 1.57, mileage: 6100, station: "Shell Castellana" },
+		{ date: daysFromNow(-19), liters: 30.0, pricePerLiter: 1.75, mileage: 6480, station: "BP Chamartín" },
+		{ date: daysFromNow(-10), liters: 33.8, pricePerLiter: 1.68, mileage: 7050, station: "Repsol Centro" },
+		{ date: daysFromNow(-3),  liters: 29.5, pricePerLiter: 1.80, mileage: 7400, station: "Cepsa Arturo Soria" },
 	];
 
 	// Refuelings for Weekend Roadster (5 entries, starting at 8500 km)
+	// Intervals: 14, 8, 9, 7 days — last refueling 4 days ago
 	const roadsterRefuelings = [
-		{ date: "2026-01-10", liters: 35.0, pricePerLiter: 1.72, mileage: 8500, station: "Repsol Sierra Norte" },
-		{ date: "2026-01-24", liters: 40.2, pricePerLiter: 1.65, mileage: 9200, station: "BP Navacerrada" },
-		{ date: "2026-02-01", liters: 38.0, pricePerLiter: 1.78, mileage: 9750, station: "Shell Segovia" },
-		{ date: "2026-02-10", liters: 42.5, pricePerLiter: 1.60, mileage: 10500, station: "Cepsa Ávila" },
-		{ date: "2026-02-17", liters: 36.8, pricePerLiter: 1.70, mileage: 11100, station: "Repsol Sierra Norte" },
+		{ date: daysFromNow(-42), liters: 35.0, pricePerLiter: 1.72, mileage: 8500, station: "Repsol Sierra Norte" },
+		{ date: daysFromNow(-28), liters: 40.2, pricePerLiter: 1.65, mileage: 9200, station: "BP Navacerrada" },
+		{ date: daysFromNow(-20), liters: 38.0, pricePerLiter: 1.78, mileage: 9750, station: "Shell Segovia" },
+		{ date: daysFromNow(-11), liters: 42.5, pricePerLiter: 1.60, mileage: 10500, station: "Cepsa Ávila" },
+		{ date: daysFromNow(-4),  liters: 36.8, pricePerLiter: 1.70, mileage: 11100, station: "Repsol Sierra Norte" },
 	];
 
 	const allRefuelings = [
