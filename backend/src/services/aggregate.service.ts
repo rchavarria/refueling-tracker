@@ -1,12 +1,36 @@
-import type { MonthlyAggregateRow } from "@shared/schemas/statistics.js";
+import type { MonthlyAggregateRow, MonthlyKmPerVehicleResponse } from "@shared/schemas/statistics.js";
 import { calculateConsumption } from "./statistics.service.js";
 import prisma from "../lib/prisma.js";
 
+// ---------------------------------------------------------------------------
+// Shared helper: fetches per-vehicle monthly consumption data for the last 12 months
+// ---------------------------------------------------------------------------
+
+interface VehicleMonthlyEntry {
+  monthKey: string;
+  kmTraveled: number | null;
+  liters: number;
+  cost: number;
+}
+
+interface VehicleMonthlyData {
+  vehicleId: number;
+  vehicleName: string;
+  entries: VehicleMonthlyEntry[];
+}
+
+export interface MonthlyDataResult {
+  months: string[];
+  vehicleData: VehicleMonthlyData[];
+}
+
 /**
- * Returns monthly aggregate statistics for the last 12 months across all vehicles.
- * Each row contains totals and averages for one month.
+ * Returns the list of 12 month keys and, for each vehicle that has refuelings,
+ * the per-refueling consumption entries bucketed by month.
+ * This is the shared foundation used by both `getMonthlyAggregate` and
+ * `getMonthlyKmPerVehicle`.
  */
-export async function getMonthlyAggregate(): Promise<MonthlyAggregateRow[]> {
+export async function getVehicleMonthlyData(): Promise<MonthlyDataResult> {
   const now = new Date();
   const cutoffDate = new Date(now.getFullYear(), now.getMonth() - 11, 1);
 
@@ -22,14 +46,10 @@ export async function getMonthlyAggregate(): Promise<MonthlyAggregateRow[]> {
   // Get all vehicles with at least one refueling
   const vehicles = await prisma.vehicle.findMany({
     where: { refuelings: { some: {} } },
-    select: { id: true },
+    select: { id: true, name: true },
   });
 
-  // Accumulator: month → { totalKm, totalLiters, totalCost }
-  const acc: Record<string, { totalKm: number; totalLiters: number; totalCost: number }> = {};
-  for (const month of months) {
-    acc[month] = { totalKm: 0, totalLiters: 0, totalCost: 0 };
-  }
+  const vehicleData: VehicleMonthlyData[] = [];
 
   for (const vehicle of vehicles) {
     // Refuelings within the range
@@ -62,6 +82,7 @@ export async function getMonthlyAggregate(): Promise<MonthlyAggregateRow[]> {
     // Skip the reference result (index 0) if we had a reference
     const startIndex = reference ? 1 : 0;
 
+    const entries: VehicleMonthlyEntry[] = [];
     for (let i = startIndex; i < consumptionResults.length; i++) {
       const refueling = forStats[i];
       const result = consumptionResults[i];
@@ -69,13 +90,50 @@ export async function getMonthlyAggregate(): Promise<MonthlyAggregateRow[]> {
       const refDate = new Date(refueling.date);
       const monthKey = `${refDate.getFullYear()}-${String(refDate.getMonth() + 1).padStart(2, "0")}`;
 
-      if (!(monthKey in acc)) continue; // outside our 12-month window
+      entries.push({
+        monthKey,
+        kmTraveled: result.kmTraveled,
+        liters: refueling.liters,
+        cost: refueling.totalPrice,
+      });
+    }
 
-      if (result.kmTraveled !== null) {
-        acc[monthKey].totalKm += result.kmTraveled;
+    vehicleData.push({
+      vehicleId: vehicle.id,
+      vehicleName: vehicle.name,
+      entries,
+    });
+  }
+
+  return { months, vehicleData };
+}
+
+// ---------------------------------------------------------------------------
+// getMonthlyAggregate — same behaviour as before, now uses shared helper
+// ---------------------------------------------------------------------------
+
+/**
+ * Returns monthly aggregate statistics for the last 12 months across all vehicles.
+ * Each row contains totals and averages for one month.
+ */
+export async function getMonthlyAggregate(): Promise<MonthlyAggregateRow[]> {
+  const { months, vehicleData } = await getVehicleMonthlyData();
+
+  // Accumulator: month → { totalKm, totalLiters, totalCost }
+  const acc: Record<string, { totalKm: number; totalLiters: number; totalCost: number }> = {};
+  for (const month of months) {
+    acc[month] = { totalKm: 0, totalLiters: 0, totalCost: 0 };
+  }
+
+  for (const vehicle of vehicleData) {
+    for (const entry of vehicle.entries) {
+      if (!(entry.monthKey in acc)) continue;
+
+      if (entry.kmTraveled !== null) {
+        acc[entry.monthKey].totalKm += entry.kmTraveled;
       }
-      acc[monthKey].totalLiters += refueling.liters;
-      acc[monthKey].totalCost += refueling.totalPrice;
+      acc[entry.monthKey].totalLiters += entry.liters;
+      acc[entry.monthKey].totalCost += entry.cost;
     }
   }
 
@@ -96,6 +154,45 @@ export async function getMonthlyAggregate(): Promise<MonthlyAggregateRow[]> {
     };
   });
 }
+
+// ---------------------------------------------------------------------------
+// getMonthlyKmPerVehicle — km traveled per month broken down by vehicle
+// ---------------------------------------------------------------------------
+
+/**
+ * Returns km traveled per month for the last 12 months, broken down per vehicle,
+ * plus a total across all vehicles.
+ */
+export async function getMonthlyKmPerVehicle(): Promise<MonthlyKmPerVehicleResponse> {
+  const { months, vehicleData } = await getVehicleMonthlyData();
+
+  const vehicleNames = vehicleData.map((v) => v.vehicleName);
+
+  // Accumulator: month → per-vehicle km (parallel array with vehicleData)
+  const acc: Record<string, number[]> = {};
+  for (const month of months) {
+    acc[month] = new Array(vehicleData.length).fill(0);
+  }
+
+  for (let vIdx = 0; vIdx < vehicleData.length; vIdx++) {
+    for (const entry of vehicleData[vIdx].entries) {
+      if (!(entry.monthKey in acc)) continue;
+      if (entry.kmTraveled !== null) {
+        acc[entry.monthKey][vIdx] += entry.kmTraveled;
+      }
+    }
+  }
+
+  const rows = months.map((month) => {
+    const vehicleKm = acc[month].map((km) => round2(km));
+    const totalKm = round2(vehicleKm.reduce((sum, km) => sum + km, 0));
+    return { month, vehicleKm, totalKm };
+  });
+
+  return { vehicles: vehicleNames, rows };
+}
+
+// ---------------------------------------------------------------------------
 
 function round2(value: number): number {
   return Math.round(value * 100) / 100;

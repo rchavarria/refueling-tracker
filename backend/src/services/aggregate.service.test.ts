@@ -19,7 +19,7 @@ vi.mock("../lib/prisma.js", () => ({
   },
 }));
 
-import { getMonthlyAggregate } from "./aggregate.service.js";
+import { getMonthlyAggregate, getMonthlyKmPerVehicle } from "./aggregate.service.js";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -72,8 +72,11 @@ describe("getMonthlyAggregate", () => {
     }
   });
 
+  /* NOTE: The helper now selects { id, name } from vehicle.
+     The mock returns objects with name to match. */
+
   it("calculates aggregates for one vehicle with refuelings across months", async () => {
-    mockFindMany.mockResolvedValue([{ id: 1 }]);
+    mockFindMany.mockResolvedValue([{ id: 1, name: "Honda" }]);
 
     // Refuelings in range (cutoff = 2025-04-01)
     mockRefuelingFindMany.mockResolvedValue([
@@ -104,7 +107,7 @@ describe("getMonthlyAggregate", () => {
   });
 
   it("aggregates data from multiple vehicles in the same month", async () => {
-    mockFindMany.mockResolvedValue([{ id: 1 }, { id: 2 }]);
+    mockFindMany.mockResolvedValue([{ id: 1, name: "Honda" }, { id: 2, name: "Toyota" }]);
 
     // Vehicle 1: refueling in May
     mockRefuelingFindMany
@@ -130,7 +133,7 @@ describe("getMonthlyAggregate", () => {
   });
 
   it("returns null averages for months with totalKm === 0", async () => {
-    mockFindMany.mockResolvedValue([{ id: 1 }]);
+    mockFindMany.mockResolvedValue([{ id: 1, name: "Honda" }]);
 
     // No refuelings in range
     mockRefuelingFindMany.mockResolvedValue([]);
@@ -145,7 +148,7 @@ describe("getMonthlyAggregate", () => {
   });
 
   it("uses reference refueling before range for first in-range km calculation", async () => {
-    mockFindMany.mockResolvedValue([{ id: 1 }]);
+    mockFindMany.mockResolvedValue([{ id: 1, name: "Honda" }]);
 
     // Only one refueling in range — needs reference to calculate km
     mockRefuelingFindMany.mockResolvedValue([
@@ -165,7 +168,7 @@ describe("getMonthlyAggregate", () => {
   });
 
   it("handles first in-range refueling without reference (null km for first entry)", async () => {
-    mockFindMany.mockResolvedValue([{ id: 1 }]);
+    mockFindMany.mockResolvedValue([{ id: 1, name: "Honda" }]);
 
     // No reference before cutoff
     mockFindFirst.mockResolvedValue(null);
@@ -204,4 +207,109 @@ describe("getMonthlyAggregate", () => {
 
 // Need afterEach import
 import { afterEach } from "vitest";
+
+// ---------------------------------------------------------------------------
+// getMonthlyKmPerVehicle
+// ---------------------------------------------------------------------------
+
+describe("getMonthlyKmPerVehicle", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    fixDate();
+  });
+
+  afterEach(() => {
+    restoreDate();
+  });
+
+  it("returns empty vehicles array and 12 rows when there are no vehicles", async () => {
+    mockFindMany.mockResolvedValue([]);
+
+    const result = await getMonthlyKmPerVehicle();
+
+    expect(result.vehicles).toEqual([]);
+    expect(result.rows).toHaveLength(12);
+    expect(result.rows[0].month).toBe("2025-04");
+    expect(result.rows[11].month).toBe("2026-03");
+
+    for (const row of result.rows) {
+      expect(row.vehicleKm).toEqual([]);
+      expect(row.totalKm).toBe(0);
+    }
+  });
+
+  it("returns km per vehicle broken down by month for a single vehicle", async () => {
+    mockFindMany.mockResolvedValue([{ id: 1, name: "Honda" }]);
+
+    mockRefuelingFindMany.mockResolvedValue([
+      refueling("2025-05-10", 11000, 40, 60),
+      refueling("2025-06-15", 11500, 35, 52.5),
+    ]);
+    mockFindFirst.mockResolvedValue(refueling("2025-03-20", 10500, 38, 57));
+
+    const result = await getMonthlyKmPerVehicle();
+
+    expect(result.vehicles).toEqual(["Honda"]);
+
+    const may = result.rows.find((r) => r.month === "2025-05")!;
+    expect(may.vehicleKm).toEqual([500]);
+    expect(may.totalKm).toBe(500);
+
+    const june = result.rows.find((r) => r.month === "2025-06")!;
+    expect(june.vehicleKm).toEqual([500]);
+    expect(june.totalKm).toBe(500);
+
+    // A month with no data should have 0
+    const july = result.rows.find((r) => r.month === "2025-07")!;
+    expect(july.vehicleKm).toEqual([0]);
+    expect(july.totalKm).toBe(0);
+  });
+
+  it("returns per-vehicle breakdown for multiple vehicles", async () => {
+    mockFindMany.mockResolvedValue([{ id: 1, name: "Honda" }, { id: 2, name: "Toyota" }]);
+
+    // Vehicle 1
+    mockRefuelingFindMany
+      .mockResolvedValueOnce([refueling("2025-05-10", 11000, 40, 60)])
+      .mockResolvedValueOnce([refueling("2025-05-12", 21000, 30, 45)]);
+
+    mockFindFirst
+      .mockResolvedValueOnce(refueling("2025-03-20", 10500, 38, 57))
+      .mockResolvedValueOnce(refueling("2025-03-25", 20600, 32, 48));
+
+    const result = await getMonthlyKmPerVehicle();
+
+    expect(result.vehicles).toEqual(["Honda", "Toyota"]);
+
+    const may = result.rows.find((r) => r.month === "2025-05")!;
+    // Honda: 11000 - 10500 = 500, Toyota: 21000 - 20600 = 400
+    expect(may.vehicleKm).toEqual([500, 400]);
+    expect(may.totalKm).toBe(900);
+  });
+
+  it("shows 0 km for a vehicle with no refuelings in a given month", async () => {
+    mockFindMany.mockResolvedValue([{ id: 1, name: "Honda" }, { id: 2, name: "Toyota" }]);
+
+    // Honda has refueling in May, Toyota has refueling in June
+    mockRefuelingFindMany
+      .mockResolvedValueOnce([refueling("2025-05-10", 11000, 40, 60)])
+      .mockResolvedValueOnce([refueling("2025-06-12", 21000, 30, 45)]);
+
+    mockFindFirst
+      .mockResolvedValueOnce(refueling("2025-03-20", 10500, 38, 57))
+      .mockResolvedValueOnce(refueling("2025-03-25", 20600, 32, 48));
+
+    const result = await getMonthlyKmPerVehicle();
+
+    const may = result.rows.find((r) => r.month === "2025-05")!;
+    // Honda: 500, Toyota: 0 (no refueling that month)
+    expect(may.vehicleKm).toEqual([500, 0]);
+    expect(may.totalKm).toBe(500);
+
+    const june = result.rows.find((r) => r.month === "2025-06")!;
+    // Honda: 0, Toyota: 400
+    expect(june.vehicleKm).toEqual([0, 400]);
+    expect(june.totalKm).toBe(400);
+  });
+});
 
