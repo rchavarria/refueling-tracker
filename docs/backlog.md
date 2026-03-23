@@ -1,6 +1,5 @@
 # Backlog
 
-- refueling list by vehicle: remove column €/km
 - refueling list by vehicle: show just the last 10 refuelings, 
   with a "Show all" button that expands the list to show all refuelings for that vehicle
 - dashboard: show a graph of km traveled per month for the last 12 months, as a stacked 
@@ -10,7 +9,7 @@
 
 ## Already implemented
 
-- 2026-03-23: Refueling list by vehicle: sort by date descending (newest first)
+- 2026-03-23: Refueling list by vehicle: sort by date descending (newest first), remove €/km column
 - 2026-03-19: Manage maintenance records for vehicles (type, date, mileage, description, cost), show in vehicle detail page
 - 2026-03-12: Manage reminders
   - Tooltip on Dashboard about the color scheme for reminders (red, orange, green)

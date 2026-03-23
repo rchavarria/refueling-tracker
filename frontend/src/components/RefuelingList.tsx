@@ -35,7 +35,6 @@ export default function RefuelingList({ refuelings, stats }: Props) {
             <th className="px-4 py-3 text-right">Total km</th>
             <th className="px-4 py-3 text-right">km Traveled</th>
             <th className="px-4 py-3 text-right">L/100km</th>
-            <th className="px-4 py-3 text-right">€/km</th>
             <th className="px-4 py-3 text-left">Station</th>
           </tr>
         </thead>
@@ -50,7 +49,6 @@ export default function RefuelingList({ refuelings, stats }: Props) {
                 <td className="px-4 py-3 text-right">{r.mileage.toLocaleString()}</td>
                 <td className="px-4 py-3 text-right">{fmt(s?.kmTraveled ?? null, 0)}</td>
                 <td className="px-4 py-3 text-right">{fmt(s?.litersPer100km ?? null)}</td>
-                <td className="px-4 py-3 text-right">{fmt(s?.costPerKm ?? null)}</td>
                 <td className="px-4 py-3 text-gray-500">{r.station ?? "—"}</td>
               </tr>
             );
