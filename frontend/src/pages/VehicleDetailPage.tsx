@@ -55,13 +55,17 @@ export default function VehicleDetailPage() {
   if (error) return <p className="text-red-500">{error}</p>;
   if (!vehicle) return <p className="text-gray-500">Vehicle not found.</p>;
 
-  const stats = calculateConsumption(
+  // Calculate stats with ASC order (required by calculateConsumption),
+  // then reverse both arrays for display in DESC order (newest first)
+  const statsAsc = calculateConsumption(
     refuelings.map((r) => ({
       mileage: r.mileage,
       liters: r.liters,
       totalPrice: r.totalPrice,
     })),
   );
+  const refuelingsDesc = [...refuelings].reverse();
+  const statsDesc = [...statsAsc].reverse();
 
   return (
     <div>
@@ -101,7 +105,7 @@ export default function VehicleDetailPage() {
         </Link>
       </div>
 
-      <RefuelingList refuelings={refuelings} stats={stats} />
+      <RefuelingList refuelings={refuelingsDesc} stats={statsDesc} />
 
       {/* Maintenances Section */}
       <div className="flex items-center justify-between mt-10 mb-4">

@@ -110,7 +110,7 @@ export async function deleteVehicle(req: Request, res: Response): Promise<void> 
 	}
 }
 
-/** GET /api/vehicles/:id/refuelings — list refuelings for a vehicle ordered by date ASC */
+/** GET /api/vehicles/:id/refuelings — list refuelings for a vehicle ordered by date ASC (frontend reverses for display) */
 export async function listVehicleRefuelings(req: Request, res: Response): Promise<void> {
 	const vehicleId = Number(req.params.id);
 
