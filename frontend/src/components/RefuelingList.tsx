@@ -1,5 +1,8 @@
 import type { ConsumptionResult } from "@shared/statistics/index.js";
 import type { Refueling } from "@shared/schemas/refueling.js";
+import { useState } from "react";
+
+const DEFAULT_VISIBLE = 10;
 
 interface Props {
   refuelings: Refueling[];
@@ -20,9 +23,15 @@ function fmt(value: number | null, decimals = 2, suffix = ""): string {
 }
 
 export default function RefuelingList({ refuelings, stats }: Props) {
+  const [showAll, setShowAll] = useState(false);
+
   if (refuelings.length === 0) {
     return <p className="text-gray-400 py-8 text-center">No refuelings recorded yet.</p>;
   }
+
+  const canCollapse = refuelings.length > DEFAULT_VISIBLE;
+  const visibleRefuelings = showAll ? refuelings : refuelings.slice(0, DEFAULT_VISIBLE);
+  const visibleStats = showAll ? stats : stats.slice(0, DEFAULT_VISIBLE);
 
   return (
     <div className="overflow-x-auto">
@@ -39,8 +48,8 @@ export default function RefuelingList({ refuelings, stats }: Props) {
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100 bg-white">
-          {refuelings.map((r, i) => {
-            const s = stats[i];
+          {visibleRefuelings.map((r, i) => {
+            const s = visibleStats[i];
             return (
               <tr key={r.id} className="hover:bg-gray-50">
                 <td className="px-4 py-3 whitespace-nowrap">{formatDate(r.date)}</td>
@@ -55,6 +64,20 @@ export default function RefuelingList({ refuelings, stats }: Props) {
           })}
         </tbody>
       </table>
+
+      {canCollapse && (
+        <div className="mt-3 text-center">
+          <button
+            type="button"
+            onClick={() => setShowAll((prev) => !prev)}
+            className="text-sm text-blue-600 hover:text-blue-800 hover:underline font-medium"
+          >
+            {showAll
+              ? "Show last 10"
+              : `Show all (${refuelings.length})`}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
