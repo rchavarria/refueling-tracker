@@ -50,7 +50,7 @@ export default function MaintenanceList({ maintenances, vehicleId }: Props) {
                 {MAINTENANCE_TYPE_LABELS[m.type as MaintenanceType] ?? m.type}
               </td>
               <td className="px-4 py-3 whitespace-nowrap">{formatDate(m.date)}</td>
-              <td className="px-4 py-3">{m.description}</td>
+              <td className="px-4 py-3 max-w-xs truncate" title={m.description}>{m.description}</td>
               <td className="px-4 py-3 text-right">{m.mileage.toLocaleString()} km</td>
               <td className="px-4 py-3 text-right">{m.cost.toFixed(2)} €</td>
               <td className="px-4 py-3 text-center space-x-2">

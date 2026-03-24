@@ -50,7 +50,7 @@ export default function ReminderList({ reminders, vehicleId }: Props) {
                 {REMINDER_TYPE_LABELS[r.type as ReminderType] ?? r.type}
               </td>
               <td className="px-4 py-3 whitespace-nowrap">{formatDate(r.date)}</td>
-              <td className="px-4 py-3">{r.description}</td>
+              <td className="px-4 py-3 max-w-xs truncate" title={r.description}>{r.description}</td>
               <td className="px-4 py-3 text-right">{r.mileage.toLocaleString()} km</td>
               <td className="px-4 py-3 text-center">
                 {r.enabled ? (

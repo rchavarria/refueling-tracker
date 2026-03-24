@@ -106,7 +106,7 @@ export default function UpcomingReminders() {
                       <span className={REMINDER_BADGE_CLASSES[color]} aria-hidden="true" />
                       {formatDate(r.date)}
                     </td>
-                    <td className="px-4 py-2">{r.description}</td>
+                    <td className="px-4 py-2 max-w-xs truncate" title={r.description}>{r.description}</td>
                     <td className="px-4 py-2 text-right">{r.mileage.toLocaleString()} km</td>
                   </tr>
                 );

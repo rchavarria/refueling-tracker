@@ -1,12 +1,11 @@
 # Backlog
 
-- maintenances and reminders tables: limit description column width to leave space for
-  other columns, trim with ellipsis, and add a tooltip to show the full description on hover
 - dashboard: remove graphs by vehicle, at least the one with €/km
-- dashboard: similarly to the mileage graph, with stacked lines, do the same for L/100km
+- dashboard: similarly to the mileage graph, with stacked lines/area, do the same for L/100km
 
 ## Already implemented
 
+- 2026-03-24: maintenances and reminders tables: limit description column width, trim with ellipsis, and show full description on hover via tooltip
 - 2026-03-23: dashboard: show a graph of km traveled per month for the last 12 months, as a stacked 
   line graph with one line per vehicle, and a total line
 - 2026-03-23: Refueling list by vehicle: sort by date descending (newest first), remove €/km column, show last 10 with "Show all" toggle
