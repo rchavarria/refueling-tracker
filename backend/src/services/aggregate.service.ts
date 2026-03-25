@@ -1,4 +1,4 @@
-import type { MonthlyAggregateRow, MonthlyConsumptionPerVehicleResponse, MonthlyKmPerVehicleResponse } from "@shared/schemas/statistics.js";
+import type { MonthlyConsumptionPerVehicleResponse, MonthlyKmPerVehicleResponse } from "@shared/schemas/statistics.js";
 import { calculateConsumption } from "./statistics.service.js";
 import prisma from "../lib/prisma.js";
 
@@ -27,8 +27,8 @@ export interface MonthlyDataResult {
 /**
  * Returns the list of 12 month keys and, for each vehicle that has refuelings,
  * the per-refueling consumption entries bucketed by month.
- * This is the shared foundation used by both `getMonthlyAggregate` and
- * `getMonthlyKmPerVehicle`.
+ * This is the shared foundation used by `getMonthlyKmPerVehicle`
+ * and `getMonthlyConsumptionPerVehicle`.
  */
 export async function getVehicleMonthlyData(): Promise<MonthlyDataResult> {
   const now = new Date();
@@ -108,52 +108,6 @@ export async function getVehicleMonthlyData(): Promise<MonthlyDataResult> {
   return { months, vehicleData };
 }
 
-// ---------------------------------------------------------------------------
-// getMonthlyAggregate — same behaviour as before, now uses shared helper
-// ---------------------------------------------------------------------------
-
-/**
- * Returns monthly aggregate statistics for the last 12 months across all vehicles.
- * Each row contains totals and averages for one month.
- */
-export async function getMonthlyAggregate(): Promise<MonthlyAggregateRow[]> {
-  const { months, vehicleData } = await getVehicleMonthlyData();
-
-  // Accumulator: month → { totalKm, totalLiters, totalCost }
-  const acc: Record<string, { totalKm: number; totalLiters: number; totalCost: number }> = {};
-  for (const month of months) {
-    acc[month] = { totalKm: 0, totalLiters: 0, totalCost: 0 };
-  }
-
-  for (const vehicle of vehicleData) {
-    for (const entry of vehicle.entries) {
-      if (!(entry.monthKey in acc)) continue;
-
-      if (entry.kmTraveled !== null) {
-        acc[entry.monthKey].totalKm += entry.kmTraveled;
-      }
-      acc[entry.monthKey].totalLiters += entry.liters;
-      acc[entry.monthKey].totalCost += entry.cost;
-    }
-  }
-
-  // Build the response array
-  return months.map((month) => {
-    const data = acc[month];
-    const totalKm = round2(data.totalKm);
-    const totalLiters = round2(data.totalLiters);
-    const totalCost = round2(data.totalCost);
-
-    return {
-      month,
-      totalKm,
-      totalLiters,
-      totalCost,
-      avgLitersPer100km: totalKm > 0 ? round2((totalLiters / totalKm) * 100) : null,
-      avgCostPerKm: totalKm > 0 ? round2(totalCost / totalKm) : null,
-    };
-  });
-}
 
 // ---------------------------------------------------------------------------
 // getMonthlyKmPerVehicle — km traveled per month broken down by vehicle

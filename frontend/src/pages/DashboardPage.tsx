@@ -1,4 +1,3 @@
-import MonthlyAggregateTable from "../components/MonthlyAggregateTable";
 import MonthlyConsumptionChart from "../components/MonthlyConsumptionChart";
 import MonthlyKmChart from "../components/MonthlyKmChart";
 import UpcomingReminders from "../components/UpcomingReminders";
@@ -10,7 +9,6 @@ export default function DashboardPage() {
         <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
       </div>
 
-      <MonthlyAggregateTable />
 
       <MonthlyKmChart />
 

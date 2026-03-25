@@ -1,10 +1,4 @@
-import type { MonthlyAggregateResponse, MonthlyConsumptionPerVehicleResponse, MonthlyKmPerVehicleResponse } from "@shared/schemas/statistics.js";
-
-export async function fetchMonthlyAggregate(): Promise<MonthlyAggregateResponse> {
-  const res = await fetch("/api/statistics/monthly-aggregate");
-  if (!res.ok) throw new Error("Failed to load monthly statistics");
-  return res.json() as Promise<MonthlyAggregateResponse>;
-}
+import type { MonthlyConsumptionPerVehicleResponse, MonthlyKmPerVehicleResponse } from "@shared/schemas/statistics.js";
 
 export async function fetchMonthlyKmPerVehicle(): Promise<MonthlyKmPerVehicleResponse> {
   const res = await fetch("/api/statistics/monthly-km-per-vehicle");
