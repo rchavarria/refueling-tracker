@@ -1,5 +1,8 @@
 # Backlog
 
+- vehicle detail page: apply color rules to reminders (red, orange, green)
+- dashboard: organize in two columns, with reminders on the left and graphs on the right
+- dashboard, reminders: show just 3 columns: vehicle, date and mileage, show full description on hover via tooltip
 
 ## Already implemented
 
