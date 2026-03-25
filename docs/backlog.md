@@ -1,9 +1,10 @@
 # Backlog
 
 - dashboard: remove graphs by vehicle, at least the one with €/km
-- dashboard: similarly to the mileage graph, with stacked lines/area, do the same for L/100km
 
 ## Already implemented
+
+- 2026-03-25: dashboard: line chart showing L/100km per vehicle per month for the last 12 months (one line per vehicle, no stacking, gaps for months without data)
 
 - 2026-03-24: maintenances and reminders tables: limit description column width, trim with ellipsis, and show full description on hover via tooltip
 - 2026-03-23: dashboard: show a graph of km traveled per month for the last 12 months, as a stacked 

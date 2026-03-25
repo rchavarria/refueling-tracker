@@ -1,4 +1,4 @@
-import type { MonthlyAggregateRow, MonthlyKmPerVehicleResponse } from "@shared/schemas/statistics.js";
+import type { MonthlyAggregateRow, MonthlyConsumptionPerVehicleResponse, MonthlyKmPerVehicleResponse } from "@shared/schemas/statistics.js";
 import { calculateConsumption } from "./statistics.service.js";
 import prisma from "../lib/prisma.js";
 
@@ -187,6 +187,45 @@ export async function getMonthlyKmPerVehicle(): Promise<MonthlyKmPerVehicleRespo
     const vehicleKm = acc[month].map((km) => round2(km));
     const totalKm = round2(vehicleKm.reduce((sum, km) => sum + km, 0));
     return { month, vehicleKm, totalKm };
+  });
+
+  return { vehicles: vehicleNames, rows };
+}
+
+// ---------------------------------------------------------------------------
+// getMonthlyConsumptionPerVehicle — L/100km per month broken down by vehicle
+// ---------------------------------------------------------------------------
+
+/**
+ * Returns L/100km per month for the last 12 months, broken down per vehicle.
+ * Months where a vehicle has no km data produce `null`.
+ */
+export async function getMonthlyConsumptionPerVehicle(): Promise<MonthlyConsumptionPerVehicleResponse> {
+  const { months, vehicleData } = await getVehicleMonthlyData();
+
+  const vehicleNames = vehicleData.map((v) => v.vehicleName);
+
+  // Accumulator: month → per-vehicle { totalKm, totalLiters }
+  const acc: Record<string, { totalKm: number; totalLiters: number }[]> = {};
+  for (const month of months) {
+    acc[month] = vehicleData.map(() => ({ totalKm: 0, totalLiters: 0 }));
+  }
+
+  for (let vIdx = 0; vIdx < vehicleData.length; vIdx++) {
+    for (const entry of vehicleData[vIdx].entries) {
+      if (!(entry.monthKey in acc)) continue;
+      if (entry.kmTraveled !== null) {
+        acc[entry.monthKey][vIdx].totalKm += entry.kmTraveled;
+      }
+      acc[entry.monthKey][vIdx].totalLiters += entry.liters;
+    }
+  }
+
+  const rows = months.map((month) => {
+    const vehicleLitersPer100km = acc[month].map((data) =>
+      data.totalKm > 0 ? round2((data.totalLiters / data.totalKm) * 100) : null,
+    );
+    return { month, vehicleLitersPer100km };
   });
 
   return { vehicles: vehicleNames, rows };
