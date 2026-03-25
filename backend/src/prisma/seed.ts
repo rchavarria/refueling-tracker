@@ -46,37 +46,61 @@ async function main() {
 		},
 	});
 
-	// Refuelings for Family SUV (7 entries, starting at 12000 km)
-	// Intervals: 7, 8, 8, 7, 7, 7 days — last refueling 2 days ago
+	// Refuelings for Family SUV (20 entries, starting at 12000 km, spread over ~12 months)
 	const suvRefuelings = [
-		{ date: daysFromNow(-46), liters: 45.2, pricePerLiter: 1.62, mileage: 12000, station: "Repsol A-6 km 12" },
-		{ date: daysFromNow(-39), liters: 42.8, pricePerLiter: 1.58, mileage: 12450, station: "Cepsa Gran Vía" },
-		{ date: daysFromNow(-31), liters: 50.1, pricePerLiter: 1.65, mileage: 13050, station: "BP Alcobendas" },
-		{ date: daysFromNow(-23), liters: 38.5, pricePerLiter: 1.70, mileage: 13400, station: "Repsol A-6 km 12" },
-		{ date: daysFromNow(-16), liters: 47.3, pricePerLiter: 1.55, mileage: 14100, station: "Shell M-40 Sur" },
-		{ date: daysFromNow(-9),  liters: 44.0, pricePerLiter: 1.72, mileage: 14600, station: "Cepsa Gran Vía" },
-		{ date: daysFromNow(-2),  liters: 51.5, pricePerLiter: 1.68, mileage: 15350, station: "BP Alcobendas" },
+		{ date: daysFromNow(-365), liters: 45.2, pricePerLiter: 1.62, mileage: 12000, station: "Repsol A-6 km 12" },
+		{ date: daysFromNow(-345), liters: 42.8, pricePerLiter: 1.58, mileage: 12400, station: "Cepsa Gran Vía" },
+		{ date: daysFromNow(-322), liters: 50.1, pricePerLiter: 1.65, mileage: 12900, station: "BP Alcobendas" },
+		{ date: daysFromNow(-300), liters: 38.5, pricePerLiter: 1.70, mileage: 13350, station: "Shell M-40 Sur" },
+		{ date: daysFromNow(-278), liters: 47.3, pricePerLiter: 1.55, mileage: 13800, station: "Repsol A-6 km 12" },
+		{ date: daysFromNow(-260), liters: 44.0, pricePerLiter: 1.72, mileage: 14200, station: "Cepsa Gran Vía" },
+		{ date: daysFromNow(-238), liters: 51.5, pricePerLiter: 1.68, mileage: 14750, station: "BP Alcobendas" },
+		{ date: daysFromNow(-220), liters: 40.3, pricePerLiter: 1.60, mileage: 15100, station: "Repsol A-6 km 12" },
+		{ date: daysFromNow(-198), liters: 46.7, pricePerLiter: 1.74, mileage: 15600, station: "Shell M-40 Sur" },
+		{ date: daysFromNow(-175), liters: 43.1, pricePerLiter: 1.66, mileage: 16050, station: "Cepsa Gran Vía" },
+		{ date: daysFromNow(-158), liters: 49.8, pricePerLiter: 1.59, mileage: 16500, station: "BP Alcobendas" },
+		{ date: daysFromNow(-140), liters: 37.9, pricePerLiter: 1.71, mileage: 16950, station: "Repsol A-6 km 12" },
+		{ date: daysFromNow(-118), liters: 52.0, pricePerLiter: 1.63, mileage: 17500, station: "Shell M-40 Sur" },
+		{ date: daysFromNow(-100), liters: 41.5, pricePerLiter: 1.76, mileage: 17900, station: "Cepsa Gran Vía" },
+		{ date: daysFromNow(-82),  liters: 48.2, pricePerLiter: 1.54, mileage: 18400, station: "BP Alcobendas" },
+		{ date: daysFromNow(-65),  liters: 39.6, pricePerLiter: 1.69, mileage: 18850, station: "Repsol A-6 km 12" },
+		{ date: daysFromNow(-48),  liters: 44.8, pricePerLiter: 1.73, mileage: 19350, station: "Shell M-40 Sur" },
+		{ date: daysFromNow(-30),  liters: 50.5, pricePerLiter: 1.61, mileage: 19800, station: "Cepsa Gran Vía" },
+		{ date: daysFromNow(-15),  liters: 42.3, pricePerLiter: 1.67, mileage: 20300, station: "BP Alcobendas" },
+		{ date: daysFromNow(-3),   liters: 46.0, pricePerLiter: 1.70, mileage: 20750, station: "Repsol A-6 km 12" },
 	];
 
-	// Refuelings for City Commuter (6 entries, starting at 5200 km)
-	// Intervals: 11, 11, 9, 9, 7 days — last refueling 3 days ago
+	// Refuelings for City Commuter (15 entries, starting at 5200 km, spread over ~10 months)
 	const cityRefuelings = [
-		{ date: daysFromNow(-50), liters: 32.0, pricePerLiter: 1.60, mileage: 5200, station: "Repsol Centro" },
-		{ date: daysFromNow(-39), liters: 28.5, pricePerLiter: 1.63, mileage: 5530, station: "Cepsa Arturo Soria" },
-		{ date: daysFromNow(-28), liters: 35.2, pricePerLiter: 1.57, mileage: 6100, station: "Shell Castellana" },
-		{ date: daysFromNow(-19), liters: 30.0, pricePerLiter: 1.75, mileage: 6480, station: "BP Chamartín" },
-		{ date: daysFromNow(-10), liters: 33.8, pricePerLiter: 1.68, mileage: 7050, station: "Repsol Centro" },
-		{ date: daysFromNow(-3),  liters: 29.5, pricePerLiter: 1.80, mileage: 7400, station: "Cepsa Arturo Soria" },
+		{ date: daysFromNow(-300), liters: 32.0, pricePerLiter: 1.60, mileage: 5200, station: "Repsol Centro" },
+		{ date: daysFromNow(-280), liters: 28.5, pricePerLiter: 1.63, mileage: 5450, station: "Cepsa Arturo Soria" },
+		{ date: daysFromNow(-258), liters: 35.2, pricePerLiter: 1.57, mileage: 5700, station: "Shell Castellana" },
+		{ date: daysFromNow(-240), liters: 30.0, pricePerLiter: 1.75, mileage: 5950, station: "BP Chamartín" },
+		{ date: daysFromNow(-218), liters: 33.8, pricePerLiter: 1.68, mileage: 6200, station: "Repsol Centro" },
+		{ date: daysFromNow(-200), liters: 29.5, pricePerLiter: 1.80, mileage: 6450, station: "Cepsa Arturo Soria" },
+		{ date: daysFromNow(-178), liters: 31.2, pricePerLiter: 1.62, mileage: 6700, station: "Shell Castellana" },
+		{ date: daysFromNow(-155), liters: 34.6, pricePerLiter: 1.71, mileage: 6950, station: "BP Chamartín" },
+		{ date: daysFromNow(-138), liters: 27.8, pricePerLiter: 1.66, mileage: 7150, station: "Repsol Centro" },
+		{ date: daysFromNow(-115), liters: 36.0, pricePerLiter: 1.58, mileage: 7400, station: "Cepsa Arturo Soria" },
+		{ date: daysFromNow(-95),  liters: 30.5, pricePerLiter: 1.74, mileage: 7650, station: "Shell Castellana" },
+		{ date: daysFromNow(-72),  liters: 33.1, pricePerLiter: 1.64, mileage: 7900, station: "BP Chamartín" },
+		{ date: daysFromNow(-50),  liters: 28.9, pricePerLiter: 1.77, mileage: 8150, station: "Repsol Centro" },
+		{ date: daysFromNow(-25),  liters: 35.4, pricePerLiter: 1.61, mileage: 8400, station: "Cepsa Arturo Soria" },
+		{ date: daysFromNow(-5),   liters: 31.7, pricePerLiter: 1.69, mileage: 8650, station: "Shell Castellana" },
 	];
 
-	// Refuelings for Weekend Roadster (5 entries, starting at 8500 km)
-	// Intervals: 14, 8, 9, 7 days — last refueling 4 days ago
+	// Refuelings for Weekend Roadster (10 entries, starting at 8500 km, spread over ~6 months)
 	const roadsterRefuelings = [
-		{ date: daysFromNow(-42), liters: 35.0, pricePerLiter: 1.72, mileage: 8500, station: "Repsol Sierra Norte" },
-		{ date: daysFromNow(-28), liters: 40.2, pricePerLiter: 1.65, mileage: 9200, station: "BP Navacerrada" },
-		{ date: daysFromNow(-20), liters: 38.0, pricePerLiter: 1.78, mileage: 9750, station: "Shell Segovia" },
-		{ date: daysFromNow(-11), liters: 42.5, pricePerLiter: 1.60, mileage: 10500, station: "Cepsa Ávila" },
-		{ date: daysFromNow(-4),  liters: 36.8, pricePerLiter: 1.70, mileage: 11100, station: "Repsol Sierra Norte" },
+		{ date: daysFromNow(-180), liters: 35.0, pricePerLiter: 1.72, mileage: 8500,  station: "Repsol Sierra Norte" },
+		{ date: daysFromNow(-158), liters: 40.2, pricePerLiter: 1.65, mileage: 8850,  station: "BP Navacerrada" },
+		{ date: daysFromNow(-138), liters: 38.0, pricePerLiter: 1.78, mileage: 9200,  station: "Shell Segovia" },
+		{ date: daysFromNow(-118), liters: 42.5, pricePerLiter: 1.60, mileage: 9600,  station: "Cepsa Ávila" },
+		{ date: daysFromNow(-98),  liters: 36.8, pricePerLiter: 1.70, mileage: 9950,  station: "Repsol Sierra Norte" },
+		{ date: daysFromNow(-78),  liters: 39.3, pricePerLiter: 1.67, mileage: 10300, station: "BP Navacerrada" },
+		{ date: daysFromNow(-60),  liters: 41.0, pricePerLiter: 1.74, mileage: 10700, station: "Shell Segovia" },
+		{ date: daysFromNow(-40),  liters: 37.5, pricePerLiter: 1.63, mileage: 11050, station: "Cepsa Ávila" },
+		{ date: daysFromNow(-20),  liters: 43.2, pricePerLiter: 1.71, mileage: 11450, station: "Repsol Sierra Norte" },
+		{ date: daysFromNow(-4),   liters: 36.1, pricePerLiter: 1.68, mileage: 11800, station: "BP Navacerrada" },
 	];
 
 	const allRefuelings = [
@@ -110,15 +134,15 @@ async function main() {
 	}
 
 	// Last mileages per vehicle (used to set reminder mileage relative to vehicle mileage)
-	// Family SUV last mileage: 15350, City Commuter: 7400, Weekend Roadster: 11100
+	// Family SUV last mileage: 20750, City Commuter: 8650, Weekend Roadster: 11800
 	const reminderData = [
 		// --- Family SUV ---
 		// RED by date: due in 3 days (≤7 days)
-		{ vehicleId: familySuv.id, date: daysFromNow(3),  description: "Oil change - urgent (red: due in 3 days)",      type: "maintenance", mileage: 20000, enabled: true },
+		{ vehicleId: familySuv.id, date: daysFromNow(3),  description: "Oil change - urgent (red: due in 3 days)",      type: "maintenance", mileage: 30000, enabled: true },
 		// ORANGE by km: 2000 km left (1000-3000 km away), date far away
-		{ vehicleId: familySuv.id, date: daysFromNow(60), description: "Tire rotation (orange: 2000 km away)",          type: "maintenance", mileage: 17350, enabled: true },
+		{ vehicleId: familySuv.id, date: daysFromNow(60), description: "Tire rotation (orange: 2000 km away)",          type: "maintenance", mileage: 22750, enabled: true },
 		// RED overdue: due 5 days ago
-		{ vehicleId: familySuv.id, date: daysFromNow(-5), description: "Brake fluid check - overdue (red: 5 days ago)", type: "maintenance", mileage: 20000, enabled: true },
+		{ vehicleId: familySuv.id, date: daysFromNow(-5), description: "Brake fluid check - overdue (red: 5 days ago)", type: "maintenance", mileage: 30000, enabled: true },
 
 		// --- City Commuter ---
 		// GREEN by date: due in 45 days (>30 days)
@@ -128,9 +152,9 @@ async function main() {
 
 		// --- Weekend Roadster ---
 		// RED by km: 500 km left (<1000 km away), date far away
-		{ vehicleId: weekendRoadster.id, date: daysFromNow(60), description: "Tire inspection - urgent (red: 500 km away)",          type: "inspection",  mileage: 11600, enabled: true },
+		{ vehicleId: weekendRoadster.id, date: daysFromNow(60), description: "Tire inspection - urgent (red: 500 km away)",          type: "inspection",  mileage: 12300, enabled: true },
 		// GREEN by date and km: 45 days away and 5000 km away
-		{ vehicleId: weekendRoadster.id, date: daysFromNow(45), description: "Insurance renewal (green: 45 days and 5000 km away)", type: "insurance",   mileage: 16100, enabled: true },
+		{ vehicleId: weekendRoadster.id, date: daysFromNow(45), description: "Insurance renewal (green: 45 days and 5000 km away)", type: "insurance",   mileage: 16800, enabled: true },
 	];
 
 	for (const r of reminderData) {
