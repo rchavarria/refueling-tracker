@@ -4,14 +4,17 @@
 
 You are assisting with a full-stack TypeScript application: a Car Fuel Consumption Tracker Web Application.
 
-The project uses a monorepo structure with `frontend/`, `backend/`, and `shared/` folders.
+The project uses a monorepo structure with `frontend`, `backend`, and `shared` workspaces.
 
 **Key Requirements**:
 
 - All code, comments, documentation must be in English, even UI elements
+- All CLI commands must be executed from the root of the monorepo
 - When working on frontend, use [`frontend.instructions.md`](./instructions/frontend.instructions.md) for specific guidelines
 - When working on backend, use [`backend.instructions.md`](./instructions/backend.instructions.md) for specific guidelines
 - All code must be in TypeScript with strict type checking enabled
+- Check compilation errors by running `npm run build --workspace={frontend|backend|shared}`
+- Check code works by running tests as `npm run test`
 - Use Zod schemas from `shared/schemas/` for data validation across frontend and backend
 - Import shared types using `@shared/*` path alias
 - Follow Biome linting rules for code style and formatting
