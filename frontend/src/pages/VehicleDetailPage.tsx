@@ -1,14 +1,14 @@
-import type { Refueling } from "@shared/schemas/refueling.js";
-import type { Reminder } from "@shared/schemas/reminder.js";
-import type { Maintenance } from "@shared/schemas/maintenance.js";
-import type { Vehicle } from "@shared/schemas/vehicle.js";
-import { calculateConsumption } from "@shared/statistics/index.js";
-import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { fetchVehicleRefuelings } from "../api/refuelings";
-import { fetchVehicleReminders } from "../api/reminders";
-import { fetchVehicleMaintenances } from "../api/maintenances";
-import { fetchVehicle } from "../api/vehicles";
+import type {Refueling} from "@shared/schemas/refueling.js";
+import type {Reminder} from "@shared/schemas/reminder.js";
+import type {Maintenance} from "@shared/schemas/maintenance.js";
+import type {Vehicle} from "@shared/schemas/vehicle.js";
+import {calculateConsumption} from "@shared/statistics/index.js";
+import {useEffect, useState} from "react";
+import {Link, useParams} from "react-router-dom";
+import {fetchVehicleRefuelings} from "../api/refuelings";
+import {fetchVehicleReminders} from "../api/reminders";
+import {fetchVehicleMaintenances} from "../api/maintenances";
+import {fetchVehicle} from "../api/vehicles";
 import RefuelingList from "../components/RefuelingList";
 import ReminderList from "../components/ReminderList";
 import MaintenanceList from "../components/MaintenanceList";
@@ -80,43 +80,9 @@ export default function VehicleDetailPage() {
         </p>
       </div>
 
-      {/* Reminders Section */}
-      <div className="flex items-center justify-between mt-10 mb-4">
-        <h2 className="text-lg font-semibold text-gray-700">Reminders</h2>
-        <Link
-          to={`/vehicles/${vehicle.id}/reminders/new`}
-          className="bg-green-600 text-white px-4 py-2 rounded text-sm font-medium hover:bg-green-700"
-        >
-          + Add Reminder
-        </Link>
-      </div>
-
       <ReminderList reminders={reminders} vehicleId={vehicle.id} currentMileage={vehicle.currentMileage} />
 
-      {/* Refuelings Section */}
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-lg font-semibold text-gray-700">Refuelings</h2>
-
-        <Link
-          to={`/vehicles/${vehicle.id}/refuelings/new`}
-          className="bg-blue-600 text-white px-4 py-2 rounded text-sm font-medium hover:bg-blue-700"
-        >
-          + Add Refueling
-        </Link>
-      </div>
-
-      <RefuelingList refuelings={refuelingsDesc} stats={statsDesc} />
-
-      {/* Maintenances Section */}
-      <div className="flex items-center justify-between mt-10 mb-4">
-        <h2 className="text-lg font-semibold text-gray-700">Maintenances</h2>
-        <Link
-          to={`/vehicles/${vehicle.id}/maintenances/new`}
-          className="bg-green-600 text-white px-4 py-2 rounded text-sm font-medium hover:bg-green-700"
-        >
-          + Add Maintenance
-        </Link>
-      </div>
+      <RefuelingList refuelings={refuelingsDesc} vehicleId={vehicle.id} stats={statsDesc} />
 
       <MaintenanceList maintenances={maintenances} vehicleId={vehicle.id} />
     </div>

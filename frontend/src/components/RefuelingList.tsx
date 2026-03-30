@@ -1,11 +1,13 @@
-import type { ConsumptionResult } from "@shared/statistics/index.js";
-import type { Refueling } from "@shared/schemas/refueling.js";
-import { useState } from "react";
+import type {ConsumptionResult} from "@shared/statistics/index.js";
+import {Link} from "react-router-dom";
+import type {Refueling} from "@shared/schemas/refueling.js";
+import {useState} from "react";
 
 const DEFAULT_VISIBLE = 10;
 
 interface Props {
   refuelings: Refueling[];
+  vehicleId: number;
   stats: ConsumptionResult[];
 }
 
@@ -22,7 +24,7 @@ function fmt(value: number | null, decimals = 2, suffix = ""): string {
   return `${value.toFixed(decimals)}${suffix}`;
 }
 
-export default function RefuelingList({ refuelings, stats }: Props) {
+export default function RefuelingList({ refuelings, vehicleId, stats }: Props) {
   const [showAll, setShowAll] = useState(false);
 
   if (refuelings.length === 0) {
@@ -35,6 +37,17 @@ export default function RefuelingList({ refuelings, stats }: Props) {
 
   return (
     <div className="overflow-x-auto">
+      <div className="flex items-center justify-between mt-10 mb-6">
+        <h2 className="text-lg font-semibold text-gray-700">Refuelings</h2>
+
+        <Link
+          to={`/vehicles/${vehicleId}/refuelings/new`}
+          className="bg-blue-600 text-white px-4 py-2 rounded text-sm font-medium hover:bg-blue-700"
+        >
+          + Add Refueling
+        </Link>
+      </div>
+
       <table className="min-w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
         <thead className="bg-gray-100 text-gray-600 uppercase text-xs">
           <tr>

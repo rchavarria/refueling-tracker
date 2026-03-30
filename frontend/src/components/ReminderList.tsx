@@ -1,8 +1,8 @@
-import type { Reminder } from "@shared/schemas/reminder.js";
-import { REMINDER_TYPE_LABELS, type ReminderType } from "@shared/schemas/reminder.js";
-import { useNavigate } from "react-router-dom";
-import { deleteReminder } from "../api/reminders";
-import { getReminderColor, REMINDER_ROW_CLASSES, REMINDER_BADGE_CLASSES } from "../utils/reminderColor";
+import type {Reminder} from "@shared/schemas/reminder.js";
+import {REMINDER_TYPE_LABELS, type ReminderType} from "@shared/schemas/reminder.js";
+import {Link, useNavigate} from "react-router-dom";
+import {deleteReminder} from "../api/reminders";
+import {getReminderColor, REMINDER_BADGE_CLASSES, REMINDER_ROW_CLASSES} from "../utils/reminderColor";
 import ReminderColorTooltip from "./ReminderColorTooltip";
 
 interface Props {
@@ -35,10 +35,24 @@ export default function ReminderList({ reminders, vehicleId, currentMileage }: P
 
   return (
     <div className="overflow-x-auto">
+      <div className="flex items-center justify-between mt-10 mb-4">
+        <h2 className="text-lg font-semibold text-gray-700">
+          Reminders
+          <ReminderColorTooltip />
+        </h2>
+
+        <Link
+          to={`/vehicles/${vehicleId}/reminders/new`}
+          className="bg-green-600 text-white px-4 py-2 rounded text-sm font-medium hover:bg-green-700"
+        >
+          + Add Reminder
+        </Link>
+      </div>
+
       <table className="min-w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
         <thead className="bg-gray-100 text-gray-600 uppercase text-xs">
           <tr>
-            <th className="px-4 py-3 text-left flex items-center gap-2">Type <ReminderColorTooltip /></th>
+            <th className="px-4 py-3 text-left flex items-center gap-2">Type</th>
             <th className="px-4 py-3 text-left">Date</th>
             <th className="px-4 py-3 text-left">Description</th>
             <th className="px-4 py-3 text-right">Mileage</th>

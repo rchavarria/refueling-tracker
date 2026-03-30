@@ -1,7 +1,7 @@
-import type { Maintenance } from "@shared/schemas/maintenance.js";
-import { MAINTENANCE_TYPE_LABELS, type MaintenanceType } from "@shared/schemas/maintenance.js";
-import { useNavigate } from "react-router-dom";
-import { deleteMaintenance } from "../api/maintenances";
+import type {Maintenance} from "@shared/schemas/maintenance.js";
+import {MAINTENANCE_TYPE_LABELS, type MaintenanceType} from "@shared/schemas/maintenance.js";
+import {Link, useNavigate} from "react-router-dom";
+import {deleteMaintenance} from "../api/maintenances";
 
 interface Props {
   maintenances: Maintenance[];
@@ -32,6 +32,16 @@ export default function MaintenanceList({ maintenances, vehicleId }: Props) {
 
   return (
     <div className="overflow-x-auto">
+      <div className="flex items-center justify-between mt-10 mb-4">
+        <h2 className="text-lg font-semibold text-gray-700">Maintenances</h2>
+        <Link
+          to={`/vehicles/${vehicleId}/maintenances/new`}
+          className="bg-green-600 text-white px-4 py-2 rounded text-sm font-medium hover:bg-green-700"
+        >
+          + Add Maintenance
+        </Link>
+      </div>
+
       <table className="min-w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
         <thead className="bg-gray-100 text-gray-600 uppercase text-xs">
           <tr>
