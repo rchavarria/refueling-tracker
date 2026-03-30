@@ -2,10 +2,13 @@ import type { Reminder } from "@shared/schemas/reminder.js";
 import { REMINDER_TYPE_LABELS, type ReminderType } from "@shared/schemas/reminder.js";
 import { useNavigate } from "react-router-dom";
 import { deleteReminder } from "../api/reminders";
+import { getReminderColor, REMINDER_ROW_CLASSES, REMINDER_BADGE_CLASSES } from "../utils/reminderColor";
+import ReminderColorTooltip from "./ReminderColorTooltip";
 
 interface Props {
   reminders: Reminder[];
   vehicleId: number;
+  currentMileage?: number | null;
 }
 
 function formatDate(iso: string): string {
@@ -16,7 +19,7 @@ function formatDate(iso: string): string {
   return `${day}/${month}/${year}`;
 }
 
-export default function ReminderList({ reminders, vehicleId }: Props) {
+export default function ReminderList({ reminders, vehicleId, currentMileage }: Props) {
   const navigate = useNavigate();
 
   if (reminders.length === 0) {
@@ -35,7 +38,7 @@ export default function ReminderList({ reminders, vehicleId }: Props) {
       <table className="min-w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
         <thead className="bg-gray-100 text-gray-600 uppercase text-xs">
           <tr>
-            <th className="px-4 py-3 text-left">Type</th>
+            <th className="px-4 py-3 text-left flex items-center gap-2">Type <ReminderColorTooltip /></th>
             <th className="px-4 py-3 text-left">Date</th>
             <th className="px-4 py-3 text-left">Description</th>
             <th className="px-4 py-3 text-right">Mileage</th>
@@ -44,12 +47,19 @@ export default function ReminderList({ reminders, vehicleId }: Props) {
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100 bg-white">
-          {reminders.map((r) => (
-            <tr key={r.id} className="hover:bg-gray-50">
+          {reminders.map((r) => {
+            const color = r.enabled && currentMileage !== undefined
+              ? getReminderColor(r, currentMileage ?? null)
+              : null;
+            return (
+            <tr key={r.id} className={`hover:brightness-95 ${color ? REMINDER_ROW_CLASSES[color] : "hover:bg-gray-50"}`}>
               <td className="px-4 py-3 whitespace-nowrap">
                 {REMINDER_TYPE_LABELS[r.type as ReminderType] ?? r.type}
               </td>
-              <td className="px-4 py-3 whitespace-nowrap">{formatDate(r.date)}</td>
+              <td className="px-4 py-3 whitespace-nowrap">
+                {color && <span className={REMINDER_BADGE_CLASSES[color]} aria-hidden="true" />}
+                {formatDate(r.date)}
+              </td>
               <td className="px-4 py-3 max-w-xs truncate" title={r.description}>{r.description}</td>
               <td className="px-4 py-3 text-right">{r.mileage.toLocaleString()} km</td>
               <td className="px-4 py-3 text-center">
@@ -78,7 +88,8 @@ export default function ReminderList({ reminders, vehicleId }: Props) {
                 </button>
               </td>
             </tr>
-          ))}
+            );
+          })}
         </tbody>
       </table>
     </div>

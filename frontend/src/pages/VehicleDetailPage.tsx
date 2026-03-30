@@ -91,7 +91,7 @@ export default function VehicleDetailPage() {
         </Link>
       </div>
 
-      <ReminderList reminders={reminders} vehicleId={vehicle.id} />
+      <ReminderList reminders={reminders} vehicleId={vehicle.id} currentMileage={vehicle.currentMileage} />
 
       {/* Refuelings Section */}
       <div className="flex items-center justify-between mb-6">

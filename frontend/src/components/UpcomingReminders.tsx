@@ -3,45 +3,9 @@ import { REMINDER_TYPE_LABELS, type ReminderType } from "@shared/schemas/reminde
 import type { Vehicle } from "@shared/schemas/vehicle.js";
 import { useEffect, useState } from "react";
 import { fetchUpcomingReminders } from "../api/reminders";
+import { getReminderColor, REMINDER_ROW_CLASSES, REMINDER_BADGE_CLASSES } from "../utils/reminderColor";
 import ReminderColorTooltip from "./ReminderColorTooltip";
 
-type ReminderColor = "red" | "orange" | "green";
-
-function getReminderColor(reminder: Reminder & { vehicle: Vehicle }): ReminderColor {
-  const today = new Date(new Date().toISOString().split("T")[0]);
-  const dueDate = new Date(reminder.date);
-  const diffDays = Math.ceil((dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-
-  let colorByDate: ReminderColor;
-  if (diffDays <= 7) colorByDate = "red";
-  else if (diffDays <= 30) colorByDate = "orange";
-  else colorByDate = "green";
-
-  const currentMileage = reminder.vehicle.currentMileage;
-  let colorByKm: ReminderColor | null = null;
-  if (currentMileage !== null && reminder.mileage !== null) {
-    const kmLeft = reminder.mileage - currentMileage;
-    if (kmLeft < 1000) colorByKm = "red";
-    else if (kmLeft <= 3000) colorByKm = "orange";
-    else colorByKm = "green";
-  }
-
-  const priority: ReminderColor[] = ["red", "orange", "green"];
-  const colors = [colorByDate, colorByKm].filter((c): c is ReminderColor => c !== null);
-  return priority.find((p) => colors.includes(p)) ?? "green";
-}
-
-const REMINDER_ROW_CLASSES: Record<ReminderColor, string> = {
-  red: "bg-red-50",
-  orange: "bg-orange-50",
-  green: "bg-green-50",
-};
-
-const REMINDER_BADGE_CLASSES: Record<ReminderColor, string> = {
-  red: "inline-block w-2.5 h-2.5 rounded-full bg-red-500 mr-2",
-  orange: "inline-block w-2.5 h-2.5 rounded-full bg-orange-400 mr-2",
-  green: "inline-block w-2.5 h-2.5 rounded-full bg-green-500 mr-2",
-};
 
 function formatDate(iso: string): string {
   const d = new Date(iso);
@@ -88,7 +52,7 @@ export default function UpcomingReminders() {
             </thead>
             <tbody>
               {upcomingReminders.map((r) => {
-                const color = getReminderColor(r);
+                const color = getReminderColor(r, r.vehicle.currentMileage);
                 return (
                   <tr
                     key={r.id}
