@@ -1,11 +1,11 @@
 # Backlog
 
-- vehicle detail page: apply color rules to reminders (red, orange, green)
-- dashboard: organize in two columns, with reminders on the left and graphs on the right
 - dashboard, reminders: show just 3 columns: vehicle, date and mileage, show full description on hover via tooltip
 
 ## Already implemented
 
+- 2026-03-31: dashboard: organize in two columns, with reminders on the left and graphs on the right
+- 2026-03-30: vehicle detail page: apply color rules to reminders (red, orange, green)
 - 2026-03-25: dashboard: remove graphs by vehicle
 - 2026-03-25: dashboard: line chart showing L/100km per vehicle per month for the last 12 months (one line per vehicle, no stacking, gaps for months without data)
 - 2026-03-24: maintenances and reminders tables: limit description column width, trim with ellipsis, and show full description on hover via tooltip

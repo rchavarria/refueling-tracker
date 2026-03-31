@@ -9,13 +9,15 @@ export default function DashboardPage() {
         <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
       </div>
 
-
-      <MonthlyKmChart />
-
-      <MonthlyConsumptionChart />
-
-      <UpcomingReminders />
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="lg:col-span-5">
+          <UpcomingReminders />
+        </div>
+        <div className="lg:col-span-7">
+          <MonthlyKmChart />
+          <MonthlyConsumptionChart />
+        </div>
+      </div>
     </div>
   );
 }
-
