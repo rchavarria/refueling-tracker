@@ -26,7 +26,7 @@ npm install
 # Reset database, run migrations and seed
 npm run db:reset --workspace=backend
 
-# Start backend (port 3000) and frontend (port 5173) concurrently
+# Start backend (port 3003) and frontend (port 5173) concurrently
 npm run dev
 ```
 

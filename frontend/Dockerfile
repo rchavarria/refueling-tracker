@@ -12,8 +12,8 @@ COPY frontend/ ./frontend/
 RUN npm clean-install
 
 # Build arg for API URL (baked into the static bundle at build time)
-#ARG VITE_API_URL=http://localhost:3000
-ENV VITE_API_URL=http://localhost:3000
+#ARG VITE_API_URL=http://localhost:3003
+ENV VITE_API_URL=http://localhost:3003
 
 # Build the frontend
 RUN npm run build --workspace=shared
