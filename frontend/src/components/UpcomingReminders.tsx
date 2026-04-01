@@ -44,9 +44,7 @@ export default function UpcomingReminders() {
             <thead className="bg-gray-50 text-gray-600 text-left">
               <tr>
                 <th className="px-4 py-2">Vehicle</th>
-                <th className="px-4 py-2">Type</th>
                 <th className="px-4 py-2">Date</th>
-                <th className="px-4 py-2">Description</th>
                 <th className="px-4 py-2 text-right">Mileage</th>
               </tr>
             </thead>
@@ -57,20 +55,17 @@ export default function UpcomingReminders() {
                   <tr
                     key={r.id}
                     className={`border-t border-gray-100 hover:brightness-95 ${REMINDER_ROW_CLASSES[color]}`}
+                    title={`${REMINDER_TYPE_LABELS[r.type as ReminderType]}${r.description ? ` — ${r.description}` : ""}`}
                   >
                     <td className="px-4 py-2 font-medium">
                       <a href={`/vehicles/${r.vehicleId}`} className="text-blue-600 hover:underline">
                         {r.vehicle.name}
                       </a>
                     </td>
-                    <td className="px-4 py-2">
-                      {REMINDER_TYPE_LABELS[r.type as ReminderType] ?? r.type}
-                    </td>
                     <td className="px-4 py-2 whitespace-nowrap">
                       <span className={REMINDER_BADGE_CLASSES[color]} aria-hidden="true" />
                       {formatDate(r.date)}
                     </td>
-                    <td className="px-4 py-2 max-w-xs truncate" title={r.description}>{r.description}</td>
                     <td className="px-4 py-2 text-right">{r.mileage.toLocaleString()} km</td>
                   </tr>
                 );

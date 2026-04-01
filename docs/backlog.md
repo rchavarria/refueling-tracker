@@ -1,9 +1,8 @@
 # Backlog
 
-- dashboard, reminders: show just 3 columns: vehicle, date and mileage, show full description on hover via tooltip
-
 ## Already implemented
 
+- 2026-04-01: dashboard, reminders: show just 3 columns: vehicle, date and mileage, show full description on hover via tooltip
 - 2026-03-31: dashboard: organize in two columns, with reminders on the left and graphs on the right
 - 2026-03-30: vehicle detail page: apply color rules to reminders (red, orange, green)
 - 2026-03-25: dashboard: remove graphs by vehicle
