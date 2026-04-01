@@ -1,10 +1,10 @@
 import type { Reminder } from "@shared/schemas/reminder.js";
-import { REMINDER_TYPE_LABELS, type ReminderType } from "@shared/schemas/reminder.js";
 import type { Vehicle } from "@shared/schemas/vehicle.js";
 import { useEffect, useState } from "react";
 import { fetchUpcomingReminders } from "../api/reminders";
 import { getReminderColor, REMINDER_ROW_CLASSES, REMINDER_BADGE_CLASSES } from "../utils/reminderColor";
 import ReminderColorTooltip from "./ReminderColorTooltip";
+import ReminderRowTooltip from "./ReminderRowTooltip";
 
 
 function formatDate(iso: string): string {
@@ -55,13 +55,12 @@ export default function UpcomingReminders() {
                   <tr
                     key={r.id}
                     className={`border-t border-gray-100 hover:brightness-95 ${REMINDER_ROW_CLASSES[color]}`}
-                    title={`${REMINDER_TYPE_LABELS[r.type as ReminderType]}${r.description ? ` — ${r.description}` : ""}`}
                   >
-                    <td className="px-4 py-2 font-medium">
+                    <ReminderRowTooltip reminder={r} color={color}>
                       <a href={`/vehicles/${r.vehicleId}`} className="text-blue-600 hover:underline">
                         {r.vehicle.name}
                       </a>
-                    </td>
+                    </ReminderRowTooltip>
                     <td className="px-4 py-2 whitespace-nowrap">
                       <span className={REMINDER_BADGE_CLASSES[color]} aria-hidden="true" />
                       {formatDate(r.date)}
