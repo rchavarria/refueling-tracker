@@ -38,7 +38,6 @@ export default function ReminderList({ reminders, vehicleId, currentMileage }: P
       <div className="flex items-center justify-between mt-10 mb-4">
         <h2 className="text-lg font-semibold text-gray-700">
           Reminders
-          <ReminderColorTooltip />
         </h2>
 
         <Link
