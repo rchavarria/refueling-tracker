@@ -30,8 +30,8 @@ export default function UpcomingReminders() {
     <section className="mb-8">
       <h2 className="text-lg font-semibold text-gray-700 mb-3 flex items-center gap-2">
         Upcoming Reminders
-        <ReminderColorTooltip />
       </h2>
+
       {loading ? (
         <p className="text-gray-500">Loading...</p>
       ) : error ? (
@@ -74,6 +74,9 @@ export default function UpcomingReminders() {
           </table>
         </div>
       )}
+
+      <ReminderColorTooltip />
+
     </section>
   );
 }
