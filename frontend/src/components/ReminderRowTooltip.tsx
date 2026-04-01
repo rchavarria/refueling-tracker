@@ -1,7 +1,6 @@
 import { REMINDER_TYPE_LABELS, type ReminderType } from "@shared/schemas/reminder.js";
 import type { Reminder } from "@shared/schemas/reminder.js";
 import type { Vehicle } from "@shared/schemas/vehicle.js";
-import { type ReactNode, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { ReminderColor } from "../utils/reminderColor";
 
@@ -36,9 +35,7 @@ const TOOLTIP_LABEL: Record<ReminderColor, string> = {
   green: "text-green-600",
 };
 
-const TOOLTIP_APPROX_HEIGHT = 200;
-
-interface TooltipPos {
+export interface TooltipPos {
   left: number;
   top?: number;
   bottom?: number;
@@ -47,69 +44,42 @@ interface TooltipPos {
 interface Props {
   reminder: Reminder & { vehicle: Vehicle };
   color: ReminderColor;
-  children: ReactNode;
+  pos: TooltipPos | null;
 }
 
-export default function ReminderRowTooltip({ reminder, color, children }: Props) {
-  const [visible, setVisible] = useState(false);
-  const [pos, setPos] = useState<TooltipPos | null>(null);
-  const ref = useRef<HTMLTableCellElement | null>(null);
+export default function ReminderRowTooltip({ reminder, color, pos }: Props) {
+  if (!pos) return null;
 
-  const handleMouseEnter = () => {
-    if (ref.current) {
-      const rect = ref.current.getBoundingClientRect();
-      const spaceBelow = window.innerHeight - rect.bottom;
-      if (spaceBelow >= TOOLTIP_APPROX_HEIGHT) {
-        setPos({ left: rect.left, top: rect.bottom + 4 });
-      } else {
-        setPos({ left: rect.left, bottom: window.innerHeight - rect.top + 4 });
-      }
-    }
-    setVisible(true);
-  };
-
-  return (
-    <td
-      ref={ref}
-      className="px-4 py-2 font-medium"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={() => setVisible(false)}
+  return createPortal(
+    <div
+      style={{ position: "fixed", left: pos.left, top: pos.top, bottom: pos.bottom, zIndex: 50 }}
+      className={`min-w-[300px] max-w-sm w-max rounded-xl border shadow-2xl px-4 py-3 text-sm pointer-events-none ${TOOLTIP_CLASSES[color]}`}
     >
-      {children}
-      {visible &&
-        pos &&
-        createPortal(
-          <div
-            style={{ position: "fixed", left: pos.left, top: pos.top, bottom: pos.bottom, zIndex: 50 }}
-            className={`min-w-[300px] max-w-sm w-max rounded-xl border shadow-2xl px-4 py-3 text-sm pointer-events-none ${TOOLTIP_CLASSES[color]}`}
-          >
-            <p className={`text-base font-bold mb-3 ${TOOLTIP_HEADING[color]}`}>
-              {reminder.vehicle.name}
-            </p>
-            <dl className="space-y-1.5">
-              <div className="flex justify-between gap-6">
-                <dt className={`font-semibold ${TOOLTIP_LABEL[color]}`}>Type</dt>
-                <dd>{REMINDER_TYPE_LABELS[reminder.type as ReminderType]}</dd>
-              </div>
-              <div className="flex justify-between gap-6">
-                <dt className={`font-semibold ${TOOLTIP_LABEL[color]}`}>Date</dt>
-                <dd>{formatDate(reminder.date)}</dd>
-              </div>
-              <div className="flex justify-between gap-6">
-                <dt className={`font-semibold ${TOOLTIP_LABEL[color]}`}>Mileage</dt>
-                <dd>{reminder.mileage.toLocaleString()} km</dd>
-              </div>
-            </dl>
-            {reminder.description && (
-              <>
-                <hr className={`my-3 border-t ${TOOLTIP_DIVIDER[color]}`} />
-                <p className={`font-semibold mb-1 ${TOOLTIP_LABEL[color]}`}>Description</p>
-                <p className="whitespace-pre-wrap leading-relaxed">{reminder.description}</p>
-              </>
-            )}
-          </div>,
-          document.body,
-        )}
-    </td>
+      <p className={`text-base font-bold mb-3 ${TOOLTIP_HEADING[color]}`}>
+        {reminder.vehicle.name}
+      </p>
+      <dl className="space-y-1.5">
+        <div className="flex justify-between gap-6">
+          <dt className={`font-semibold ${TOOLTIP_LABEL[color]}`}>Type</dt>
+          <dd>{REMINDER_TYPE_LABELS[reminder.type as ReminderType]}</dd>
+        </div>
+        <div className="flex justify-between gap-6">
+          <dt className={`font-semibold ${TOOLTIP_LABEL[color]}`}>Date</dt>
+          <dd>{formatDate(reminder.date)}</dd>
+        </div>
+        <div className="flex justify-between gap-6">
+          <dt className={`font-semibold ${TOOLTIP_LABEL[color]}`}>Mileage</dt>
+          <dd>{reminder.mileage.toLocaleString()} km</dd>
+        </div>
+      </dl>
+      {reminder.description && (
+        <>
+          <hr className={`my-3 border-t ${TOOLTIP_DIVIDER[color]}`} />
+          <p className={`font-semibold mb-1 ${TOOLTIP_LABEL[color]}`}>Description</p>
+          <p className="whitespace-pre-wrap leading-relaxed">{reminder.description}</p>
+        </>
+      )}
+    </div>,
+    document.body,
   );
 }
