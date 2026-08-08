@@ -9,3 +9,6 @@ Basically, path to SQLite file in WSL needs to be this format:
 ```
 
 Select each table, and export it to CSV file
+
+> 2026-08-08 Update
+> This method doesn't work, use [sqliteweb](sqliteweb.md) instead
