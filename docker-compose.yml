@@ -9,8 +9,8 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3003
-      - DATABASE_URL=file:./prisma/dev.db
-#      - DATABASE_URL=file:./prisma/prod.sqlite
+#      - DATABASE_URL=file:./prisma/dev.db
+      - DATABASE_URL=file:./prisma/prod.sqlite
     volumes:
       - ./backend:/app/backend
       - ./shared:/app/shared
