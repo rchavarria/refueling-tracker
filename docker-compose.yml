@@ -35,3 +35,12 @@ services:
       backend:
         condition: service_healthy
     restart: unless-stopped
+
+#  sqliteweb:
+#    image: coleifer/sqlite-web
+#    ports:
+#      - "8080:8080"
+#    volumes:
+#      - ./backend/prisma:/data
+#    command: sqlite_web -H 0.0.0.0 -x /data/prod.sqlite
+#    restart: unless-stopped
