@@ -1,5 +1,7 @@
 # Backlog
 
+- Hay que mirar un posible bug, el aviso en rojo del mantenimiento del Toyota, que está pasado ya de fecha, no aparece en el dashboard, no se pasa por km, se pasa por la fecha que ya ha vencido
+
 ## Already implemented
 
 - 2026-04-01: dashboard, reminders: show just 3 columns: vehicle, date and mileage, show full description on hover via tooltip
