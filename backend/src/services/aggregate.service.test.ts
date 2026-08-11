@@ -39,6 +39,18 @@ function restoreDate() {
   vi.useRealTimers();
 }
 
+/** Any aggregate row keyed by month, e.g. "2025-05" */
+interface MonthlyData {
+  month: string;
+}
+
+/** Returns the row for a given month, failing loudly when it is missing */
+function findRow<T extends MonthlyData>(rows: T[], month: string): T {
+  const row = rows.find((r) => r.month === month);
+  if (!row) throw new Error(`No row found for month ${month}`);
+  return row;
+}
+
 // ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
@@ -86,16 +98,16 @@ describe("getMonthlyKmPerVehicle", () => {
 
     expect(result.vehicles).toEqual(["Honda"]);
 
-    const may = result.rows.find((r) => r.month === "2025-05")!;
+    const may = findRow(result.rows, "2025-05");
     expect(may.vehicleKm).toEqual([500]);
     expect(may.totalKm).toBe(500);
 
-    const june = result.rows.find((r) => r.month === "2025-06")!;
+    const june = findRow(result.rows, "2025-06");
     expect(june.vehicleKm).toEqual([500]);
     expect(june.totalKm).toBe(500);
 
     // A month with no data should have 0
-    const july = result.rows.find((r) => r.month === "2025-07")!;
+    const july = findRow(result.rows, "2025-07");
     expect(july.vehicleKm).toEqual([0]);
     expect(july.totalKm).toBe(0);
   });
@@ -119,7 +131,7 @@ describe("getMonthlyKmPerVehicle", () => {
 
     expect(result.vehicles).toEqual(["Honda", "Toyota"]);
 
-    const may = result.rows.find((r) => r.month === "2025-05")!;
+    const may = findRow(result.rows, "2025-05");
     // Honda: 11000 - 10500 = 500, Toyota: 21000 - 20600 = 400
     expect(may.vehicleKm).toEqual([500, 400]);
     expect(may.totalKm).toBe(900);
@@ -142,12 +154,12 @@ describe("getMonthlyKmPerVehicle", () => {
 
     const result = await getMonthlyKmPerVehicle();
 
-    const may = result.rows.find((r) => r.month === "2025-05")!;
+    const may = findRow(result.rows, "2025-05");
     // Honda: 500, Toyota: 0 (no refueling that month)
     expect(may.vehicleKm).toEqual([500, 0]);
     expect(may.totalKm).toBe(500);
 
-    const june = result.rows.find((r) => r.month === "2025-06")!;
+    const june = findRow(result.rows, "2025-06");
     // Honda: 0, Toyota: 400
     expect(june.vehicleKm).toEqual([0, 400]);
     expect(june.totalKm).toBe(400);
@@ -197,13 +209,13 @@ describe("getMonthlyConsumptionPerVehicle", () => {
 
     expect(result.vehicles).toEqual(["Honda"]);
 
-    const may = result.rows.find((r) => r.month === "2025-05")!;
+    const may = findRow(result.rows, "2025-05");
     // totalKm = 500 + 500 = 1000, totalLiters = 40 + 35 = 75
     // L/100km = (75 / 1000) * 100 = 7.5
     expect(may.vehicleLitersPer100km).toEqual([7.5]);
 
     // Month with no data → null
-    const july = result.rows.find((r) => r.month === "2025-07")!;
+    const july = findRow(result.rows, "2025-07");
     expect(july.vehicleLitersPer100km).toEqual([null]);
   });
 
@@ -226,11 +238,11 @@ describe("getMonthlyConsumptionPerVehicle", () => {
 
     expect(result.vehicles).toEqual(["Honda", "Toyota"]);
 
-    const may = result.rows.find((r) => r.month === "2025-05")!;
+    const may = findRow(result.rows, "2025-05");
     // Honda: km=500, liters=40 → 8.0 L/100km. Toyota: no data → null
     expect(may.vehicleLitersPer100km).toEqual([8, null]);
 
-    const june = result.rows.find((r) => r.month === "2025-06")!;
+    const june = findRow(result.rows, "2025-06");
     // Honda: no data → null. Toyota: km=400, liters=30 → 7.5 L/100km
     expect(june.vehicleLitersPer100km).toEqual([null, 7.5]);
   });
