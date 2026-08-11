@@ -1,6 +1,9 @@
 # Backlog
 
-- Hay que mirar un posible bug, el aviso en rojo del mantenimiento del Toyota, que está pasado ya de fecha, no aparece en el dashboard, no se pasa por km, se pasa por la fecha que ya ha vencido
+- There may be a bug: the red maintenance warning for the Toyota car,
+  which is already past due, does not appear on the dashboard.
+  It is not overdue by mileage, it is overdue by date (the due date 
+  has already passed)
 
 ## Already implemented
 
