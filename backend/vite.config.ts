@@ -9,5 +9,7 @@ export default defineConfig({
   },
   test: {
     environment: "node",
+    // Only run the TypeScript sources; `dist` holds their compiled copies
+    exclude: ["**/node_modules/**", "dist/**"],
   },
 });

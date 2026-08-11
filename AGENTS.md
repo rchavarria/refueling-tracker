@@ -63,6 +63,7 @@ Before finishing a task, run the verification commands in this order:
 ## Testing
 
 - Vitest with `environment: "node"`. Tests live next to the code as `*.test.ts`.
+- `dist/**` is excluded from the run, so only the TypeScript sources are tested.
 - Mock Prisma with `vi.mock("../lib/prisma.js", ...)` rather than hitting a real database.
 - Freeze time with `vi.useFakeTimers()` and `vi.setSystemTime()` for any date-dependent logic.
 - Add regression tests for every bug fix.
@@ -82,7 +83,6 @@ Before finishing a task, run the verification commands in this order:
   and be careful with time zones when comparing against "today".
 - Prisma date filters apply to the record's own field, not to the current date — an
   overly narrow window silently hides records.
-- Vitest also picks up compiled tests under `dist/`; a stale `dist/` may run outdated copies.
 - The Docker production entrypoint runs `prisma migrate deploy` and `prisma db seed` on every
   start, which resets the database.
 
