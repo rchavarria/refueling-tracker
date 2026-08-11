@@ -1,12 +1,9 @@
 # Backlog
 
-- There may be a bug: the red maintenance warning for the Toyota car,
-  which is already past due, does not appear on the dashboard.
-  It is not overdue by mileage, it is overdue by date (the due date 
-  has already passed)
-
 ## Already implemented
 
+- 2026-08-11: dashboard, reminders: show all enabled reminders, including those overdue by
+  more than 7 days (the `upcoming` endpoint no longer filters by date)
 - 2026-04-01: dashboard, reminders: show just 3 columns: vehicle, date and mileage, show full description on hover via tooltip
 - 2026-03-31: dashboard: organize in two columns, with reminders on the left and graphs on the right
 - 2026-03-30: vehicle detail page: apply color rules to reminders (red, orange, green)
