@@ -1,5 +1,5 @@
-import type { Request, Response } from "express";
 import { createReminderSchema, updateReminderSchema } from "@shared/schemas/reminder.js";
+import type { Request, Response } from "express";
 import prisma from "../lib/prisma.js";
 import { enrichVehicleWithMileage } from "../lib/vehicles.js";
 
@@ -64,16 +64,17 @@ export async function createVehicleReminder(req: Request, res: Response): Promis
 	res.status(201).json(reminder);
 }
 
-/** GET /api/reminders/upcoming — upcoming reminders (enabled, date >= today - 7 days) */
+/**
+ * GET /api/reminders/upcoming — all enabled reminders, including overdue ones.
+ *
+ * No date filter is applied on purpose: users must not lose track of any reminder.
+ * Hiding one is an explicit user action — disable it, or edit it with a new
+ * date/mileage.
+ */
 export async function getUpcomingReminders(_req: Request, res: Response): Promise<void> {
-	const sevenDaysAgo = new Date();
-	sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-	sevenDaysAgo.setHours(0, 0, 0, 0);
-
 	const reminders = await prisma.reminder.findMany({
 		where: {
 			enabled: true,
-			date: { gte: sevenDaysAgo },
 		},
 		orderBy: { date: "asc" },
 		include: { vehicle: true },
@@ -156,4 +157,3 @@ function isPrismaRecordNotFoundError(err: unknown): boolean {
 		(err as { code: string }).code === "P2025"
 	);
 }
-
