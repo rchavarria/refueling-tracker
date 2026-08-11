@@ -38,9 +38,12 @@ export default function RefuelingForm({ onSubmit, error, loading }: Props) {
       )}
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Date *</label>
+        <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">
+          Date *
+        </label>
         <input
           {...register("date")}
+          id="date"
           type="date"
           className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
@@ -48,9 +51,12 @@ export default function RefuelingForm({ onSubmit, error, loading }: Props) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Liters *</label>
+        <label htmlFor="liters" className="block text-sm font-medium text-gray-700 mb-1">
+          Liters *
+        </label>
         <input
           {...register("liters", { valueAsNumber: true })}
+          id="liters"
           type="number"
           step="0.01"
           className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -60,9 +66,12 @@ export default function RefuelingForm({ onSubmit, error, loading }: Props) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Total Price (€) *</label>
+        <label htmlFor="totalPrice" className="block text-sm font-medium text-gray-700 mb-1">
+          Total Price (€) *
+        </label>
         <input
           {...register("totalPrice", { valueAsNumber: true })}
+          id="totalPrice"
           type="number"
           step="0.01"
           className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -74,9 +83,12 @@ export default function RefuelingForm({ onSubmit, error, loading }: Props) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Mileage (km) *</label>
+        <label htmlFor="mileage" className="block text-sm font-medium text-gray-700 mb-1">
+          Mileage (km) *
+        </label>
         <input
           {...register("mileage", { valueAsNumber: true })}
+          id="mileage"
           type="number"
           className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="85000"
@@ -85,9 +97,12 @@ export default function RefuelingForm({ onSubmit, error, loading }: Props) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Station</label>
+        <label htmlFor="station" className="block text-sm font-medium text-gray-700 mb-1">
+          Station
+        </label>
         <input
           {...register("station")}
+          id="station"
           className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Repsol, Cepsa..."
         />
@@ -103,4 +118,3 @@ export default function RefuelingForm({ onSubmit, error, loading }: Props) {
     </form>
   );
 }
-

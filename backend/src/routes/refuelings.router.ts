@@ -1,9 +1,9 @@
 import { Router } from "express";
 import {
-	listRefuelings,
-	getRefueling,
-	updateRefueling,
-	deleteRefueling,
+  deleteRefueling,
+  getRefueling,
+  listRefuelings,
+  updateRefueling,
 } from "../controllers/refuelings.controller.js";
 
 const router = Router();
@@ -14,4 +14,3 @@ router.put("/:id", updateRefueling);
 router.delete("/:id", deleteRefueling);
 
 export default router;
-

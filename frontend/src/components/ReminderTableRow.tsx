@@ -1,7 +1,11 @@
 import type { Reminder } from "@shared/schemas/reminder.js";
 import type { Vehicle } from "@shared/schemas/vehicle.js";
 import { useRef, useState } from "react";
-import { getReminderColor, REMINDER_BADGE_CLASSES, REMINDER_ROW_CLASSES } from "../utils/reminderColor";
+import {
+  getReminderColor,
+  REMINDER_BADGE_CLASSES,
+  REMINDER_ROW_CLASSES,
+} from "../utils/reminderColor";
 import ReminderRowTooltip, { type TooltipPos } from "./ReminderRowTooltip";
 
 function formatDate(iso: string): string {
@@ -53,4 +57,3 @@ export default function ReminderTableRow({ r }: { r: Reminder & { vehicle: Vehic
     </tr>
   );
 }
-

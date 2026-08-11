@@ -2,8 +2,7 @@ import { z } from "zod";
 
 /** Shape used when creating a refueling (no id, no vehicleId — extracted from route) */
 export const createRefuelingSchema = z.object({
-  date: z.string()
-    .date("Date must be a valid date string"),
+  date: z.string().date("Date must be a valid date string"),
   liters: z.number().positive("Liters must be a positive number"),
   totalPrice: z.number().positive("Total price must be a positive number"),
   mileage: z.number().int().positive("Mileage must be a positive integer"),
@@ -30,4 +29,3 @@ export type CreateRefueling = z.infer<typeof createRefuelingSchema>;
 export type UpdateRefueling = z.infer<typeof updateRefuelingSchema>;
 export type Refueling = z.infer<typeof refuelingSchema>;
 export type RefuelingForStats = z.infer<typeof refuelingForStatsSchema>;
-

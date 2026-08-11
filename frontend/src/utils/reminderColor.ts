@@ -43,4 +43,3 @@ export const REMINDER_BADGE_CLASSES: Record<ReminderColor, string> = {
   orange: "inline-block w-2.5 h-2.5 rounded-full bg-orange-400 mr-2",
   green: "inline-block w-2.5 h-2.5 rounded-full bg-green-500 mr-2",
 };
-

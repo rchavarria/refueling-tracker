@@ -1,4 +1,8 @@
-import type { CreateMaintenance, Maintenance, UpdateMaintenance } from "@shared/schemas/maintenance.js";
+import type {
+  CreateMaintenance,
+  Maintenance,
+  UpdateMaintenance,
+} from "@shared/schemas/maintenance.js";
 
 export async function fetchVehicleMaintenances(vehicleId: number): Promise<Maintenance[]> {
   const res = await fetch(`/api/vehicles/${vehicleId}/maintenances`);
@@ -22,10 +26,7 @@ export async function createMaintenance(
   return res.json() as Promise<Maintenance>;
 }
 
-export async function updateMaintenance(
-  id: number,
-  data: UpdateMaintenance,
-): Promise<Maintenance> {
+export async function updateMaintenance(id: number, data: UpdateMaintenance): Promise<Maintenance> {
   const res = await fetch(`/api/maintenances/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
@@ -42,4 +43,3 @@ export async function deleteMaintenance(id: number): Promise<void> {
   const res = await fetch(`/api/maintenances/${id}`, { method: "DELETE" });
   if (!res.ok) throw new Error(`Failed to delete maintenance ${id}`);
 }
-

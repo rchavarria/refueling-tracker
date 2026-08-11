@@ -1,12 +1,12 @@
 import { Router } from "express";
 import {
-	listVehicles,
-	getVehicle,
-	createVehicle,
-	updateVehicle,
-	deleteVehicle,
-	listVehicleRefuelings,
-	createVehicleRefueling,
+  createVehicle,
+  createVehicleRefueling,
+  deleteVehicle,
+  getVehicle,
+  listVehicleRefuelings,
+  listVehicles,
+  updateVehicle,
 } from "../controllers/vehicles.controller.js";
 import { validateMileage } from "../middleware/validateMileage.js";
 
@@ -22,4 +22,3 @@ router.get("/:id/refuelings", listVehicleRefuelings);
 router.post("/:id/refuelings", validateMileage, createVehicleRefueling);
 
 export default router;
-

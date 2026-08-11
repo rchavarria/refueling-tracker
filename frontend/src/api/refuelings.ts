@@ -21,4 +21,3 @@ export async function createRefueling(
   }
   return res.json() as Promise<Refueling>;
 }
-

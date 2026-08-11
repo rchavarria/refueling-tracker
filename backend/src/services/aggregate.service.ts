@@ -1,6 +1,9 @@
-import type { MonthlyConsumptionPerVehicleResponse, MonthlyKmPerVehicleResponse } from "@shared/schemas/statistics.js";
-import { calculateConsumption } from "./statistics.service.js";
+import type {
+  MonthlyConsumptionPerVehicleResponse,
+  MonthlyKmPerVehicleResponse,
+} from "@shared/schemas/statistics.js";
 import prisma from "../lib/prisma.js";
+import { calculateConsumption } from "./statistics.service.js";
 
 // ---------------------------------------------------------------------------
 // Shared helper: fetches per-vehicle monthly consumption data for the last 12 months
@@ -67,9 +70,7 @@ export async function getVehicleMonthlyData(): Promise<MonthlyDataResult> {
     });
 
     // Build the input for calculateConsumption
-    const forStats = reference
-      ? [reference, ...refuelingsInRange]
-      : refuelingsInRange;
+    const forStats = reference ? [reference, ...refuelingsInRange] : refuelingsInRange;
 
     const statsInput = forStats.map((r) => ({
       mileage: r.mileage,
@@ -107,7 +108,6 @@ export async function getVehicleMonthlyData(): Promise<MonthlyDataResult> {
 
   return { months, vehicleData };
 }
-
 
 // ---------------------------------------------------------------------------
 // getMonthlyKmPerVehicle — km traveled per month broken down by vehicle
@@ -190,4 +190,3 @@ export async function getMonthlyConsumptionPerVehicle(): Promise<MonthlyConsumpt
 function round2(value: number): number {
   return Math.round(value * 100) / 100;
 }
-

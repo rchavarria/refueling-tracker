@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-
 /** Schema for the km-per-vehicle-per-month response */
 export const monthlyKmPerVehicleResponseSchema = z.object({
   vehicles: z.array(z.string()),
@@ -27,5 +26,6 @@ export const monthlyConsumptionPerVehicleResponseSchema = z.object({
   ),
 });
 
-export type MonthlyConsumptionPerVehicleResponse = z.infer<typeof monthlyConsumptionPerVehicleResponseSchema>;
-
+export type MonthlyConsumptionPerVehicleResponse = z.infer<
+  typeof monthlyConsumptionPerVehicleResponseSchema
+>;

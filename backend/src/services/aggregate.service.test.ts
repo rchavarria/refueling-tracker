@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 // ---------------------------------------------------------------------------
 // Mock Prisma
@@ -42,7 +42,6 @@ function restoreDate() {
 // ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
-
 
 // ---------------------------------------------------------------------------
 // getMonthlyKmPerVehicle
@@ -102,7 +101,10 @@ describe("getMonthlyKmPerVehicle", () => {
   });
 
   it("returns per-vehicle breakdown for multiple vehicles", async () => {
-    mockFindMany.mockResolvedValue([{ id: 1, name: "Honda" }, { id: 2, name: "Toyota" }]);
+    mockFindMany.mockResolvedValue([
+      { id: 1, name: "Honda" },
+      { id: 2, name: "Toyota" },
+    ]);
 
     // Vehicle 1
     mockRefuelingFindMany
@@ -124,7 +126,10 @@ describe("getMonthlyKmPerVehicle", () => {
   });
 
   it("shows 0 km for a vehicle with no refuelings in a given month", async () => {
-    mockFindMany.mockResolvedValue([{ id: 1, name: "Honda" }, { id: 2, name: "Toyota" }]);
+    mockFindMany.mockResolvedValue([
+      { id: 1, name: "Honda" },
+      { id: 2, name: "Toyota" },
+    ]);
 
     // Honda has refueling in May, Toyota has refueling in June
     mockRefuelingFindMany
@@ -203,7 +208,10 @@ describe("getMonthlyConsumptionPerVehicle", () => {
   });
 
   it("returns per-vehicle L/100km for two vehicles with data in different months", async () => {
-    mockFindMany.mockResolvedValue([{ id: 1, name: "Honda" }, { id: 2, name: "Toyota" }]);
+    mockFindMany.mockResolvedValue([
+      { id: 1, name: "Honda" },
+      { id: 2, name: "Toyota" },
+    ]);
 
     // Honda: refueling in May
     mockRefuelingFindMany
@@ -227,4 +235,3 @@ describe("getMonthlyConsumptionPerVehicle", () => {
     expect(june.vehicleLitersPer100km).toEqual([null, 7.5]);
   });
 });
-

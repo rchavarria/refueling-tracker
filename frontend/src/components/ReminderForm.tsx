@@ -1,6 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { CreateReminder } from "@shared/schemas/reminder.js";
-import { createReminderSchema, REMINDER_TYPE_LABELS, reminderTypeEnum } from "@shared/schemas/reminder.js";
+import {
+  createReminderSchema,
+  REMINDER_TYPE_LABELS,
+  reminderTypeEnum,
+} from "@shared/schemas/reminder.js";
 import { useForm } from "react-hook-form";
 
 interface FormValues {
@@ -46,9 +50,12 @@ export default function ReminderForm({ onSubmit, defaultValues, error, loading }
       )}
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Date *</label>
+        <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">
+          Date *
+        </label>
         <input
           {...register("date")}
+          id="date"
           type="date"
           className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
@@ -56,9 +63,12 @@ export default function ReminderForm({ onSubmit, defaultValues, error, loading }
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Description *</label>
+        <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+          Description *
+        </label>
         <input
           {...register("description")}
+          id="description"
           className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Oil change, insurance renewal..."
         />
@@ -68,9 +78,12 @@ export default function ReminderForm({ onSubmit, defaultValues, error, loading }
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Type *</label>
+        <label htmlFor="type" className="block text-sm font-medium text-gray-700 mb-1">
+          Type *
+        </label>
         <select
           {...register("type")}
+          id="type"
           className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="">Select a type...</option>
@@ -84,9 +97,12 @@ export default function ReminderForm({ onSubmit, defaultValues, error, loading }
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Mileage (km) *</label>
+        <label htmlFor="mileage" className="block text-sm font-medium text-gray-700 mb-1">
+          Mileage (km) *
+        </label>
         <input
           {...register("mileage", { valueAsNumber: true })}
+          id="mileage"
           type="number"
           className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="85000"
@@ -116,4 +132,3 @@ export default function ReminderForm({ onSubmit, defaultValues, error, loading }
     </form>
   );
 }
-

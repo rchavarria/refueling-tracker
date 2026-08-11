@@ -1,8 +1,7 @@
 import { describe, expect, it } from "vitest";
-import {createRefuelingSchema} from "./refueling";
+import { createRefuelingSchema } from "./refueling";
 
 describe("createRefuelingSchema", () => {
-
   describe("happy path", () => {
     it("parses correctly", () => {
       const parsed = createRefuelingSchema.parse({
@@ -16,5 +15,4 @@ describe("createRefuelingSchema", () => {
       expect(parsed).toBeDefined();
     });
   });
-
 });

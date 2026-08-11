@@ -1,5 +1,5 @@
-import { REMINDER_TYPE_LABELS, type ReminderType } from "@shared/schemas/reminder.js";
 import type { Reminder } from "@shared/schemas/reminder.js";
+import { REMINDER_TYPE_LABELS, type ReminderType } from "@shared/schemas/reminder.js";
 import type { Vehicle } from "@shared/schemas/vehicle.js";
 import { createPortal } from "react-dom";
 import type { ReminderColor } from "../utils/reminderColor";

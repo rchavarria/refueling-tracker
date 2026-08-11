@@ -4,8 +4,8 @@ import {
   CategoryScale,
   Chart as ChartJS,
   Legend,
-  LineElement,
   LinearScale,
+  LineElement,
   PointElement,
   Title,
   Tooltip,
@@ -17,20 +17,30 @@ import { fetchMonthlyConsumptionPerVehicle } from "../api/statistics";
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 const MONTH_NAMES = [
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
 ];
 
 /** Fixed colour palette for vehicle lines */
 const VEHICLE_COLORS = [
-  "rgb(59, 130, 246)",   // blue
-  "rgb(239, 68, 68)",    // red
-  "rgb(16, 185, 129)",   // green
-  "rgb(245, 158, 11)",   // amber
-  "rgb(139, 92, 246)",   // violet
-  "rgb(236, 72, 153)",   // pink
-  "rgb(14, 165, 233)",   // sky
-  "rgb(168, 85, 247)",   // purple
+  "rgb(59, 130, 246)", // blue
+  "rgb(239, 68, 68)", // red
+  "rgb(16, 185, 129)", // green
+  "rgb(245, 158, 11)", // amber
+  "rgb(139, 92, 246)", // violet
+  "rgb(236, 72, 153)", // pink
+  "rgb(14, 165, 233)", // sky
+  "rgb(168, 85, 247)", // purple
 ];
 
 function formatMonth(month: string): string {
@@ -98,11 +108,12 @@ export default function MonthlyConsumptionChart() {
 
   return (
     <section className="mb-8">
-      <h2 className="text-lg font-semibold text-gray-700 mb-3">Fuel Consumption per Month (L/100km)</h2>
+      <h2 className="text-lg font-semibold text-gray-700 mb-3">
+        Fuel Consumption per Month (L/100km)
+      </h2>
       <div className="bg-white rounded-lg border border-gray-200 p-5 shadow-sm">
         <Line data={chartData} options={options} />
       </div>
     </section>
   );
 }
-

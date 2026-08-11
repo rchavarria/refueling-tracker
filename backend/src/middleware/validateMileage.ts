@@ -7,38 +7,37 @@ import prisma from "../lib/prisma.js";
  * Expects `req.params.id` to be the vehicle ID and `req.body.mileage` to be set.
  */
 export async function validateMileage(
-	req: Request,
-	res: Response,
-	next: NextFunction,
+  req: Request,
+  res: Response,
+  next: NextFunction,
 ): Promise<void> {
-	const vehicleId = Number(req.params.id);
+  const vehicleId = Number(req.params.id);
 
-	if (Number.isNaN(vehicleId)) {
-		res.status(400).json({ error: "Invalid vehicle ID" });
-		return;
-	}
+  if (Number.isNaN(vehicleId)) {
+    res.status(400).json({ error: "Invalid vehicle ID" });
+    return;
+  }
 
-	const newMileage = req.body?.mileage;
+  const newMileage = req.body?.mileage;
 
-	if (typeof newMileage !== "number") {
-		// Let the controller's Zod validation handle missing/invalid mileage
-		next();
-		return;
-	}
+  if (typeof newMileage !== "number") {
+    // Let the controller's Zod validation handle missing/invalid mileage
+    next();
+    return;
+  }
 
-	const lastRefueling = await prisma.refueling.findFirst({
-		where: { vehicleId },
-		orderBy: { mileage: "desc" },
-		select: { mileage: true },
-	});
+  const lastRefueling = await prisma.refueling.findFirst({
+    where: { vehicleId },
+    orderBy: { mileage: "desc" },
+    select: { mileage: true },
+  });
 
-	if (lastRefueling !== null && newMileage <= lastRefueling.mileage) {
-		res.status(400).json({
-			error: `Mileage must be greater than the last recorded (${lastRefueling.mileage} km)`,
-		});
-		return;
-	}
+  if (lastRefueling !== null && newMileage <= lastRefueling.mileage) {
+    res.status(400).json({
+      error: `Mileage must be greater than the last recorded (${lastRefueling.mileage} km)`,
+    });
+    return;
+  }
 
-	next();
+  next();
 }
-

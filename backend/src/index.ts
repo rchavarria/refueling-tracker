@@ -1,11 +1,11 @@
 import cors from "cors";
 import express, { type Request, type Response } from "express";
 import prisma from "./lib/prisma";
-import vehiclesRouter from "./routes/vehicles.router.js";
+import { maintenancesRouter, vehicleMaintenancesRouter } from "./routes/maintenances.router.js";
 import refuelingsRouter from "./routes/refuelings.router.js";
+import { remindersRouter, vehicleRemindersRouter } from "./routes/reminders.router.js";
 import statisticsRouter from "./routes/statistics.router.js";
-import { vehicleRemindersRouter, remindersRouter } from "./routes/reminders.router.js";
-import { vehicleMaintenancesRouter, maintenancesRouter } from "./routes/maintenances.router.js";
+import vehiclesRouter from "./routes/vehicles.router.js";
 
 const app = express();
 const PORT = process.env.PORT || 3003;
@@ -14,7 +14,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/api/health", (_req: Request, res: Response) => {
-	res.json({ status: "ok", timestamp: new Date().toISOString() });
+  res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
 app.use("/api/vehicles", vehiclesRouter);
@@ -26,16 +26,15 @@ app.use("/api/maintenances", maintenancesRouter);
 app.use("/api/statistics", statisticsRouter);
 
 const server = app.listen(PORT, () => {
-	console.log(`Backend server running on http://localhost:${PORT}`);
+  console.log(`Backend server running on http://localhost:${PORT}`);
 });
 
-process.on('SIGTERM', () => {
-  console.debug('SIGTERM signal received: closing HTTP server');
+process.on("SIGTERM", () => {
+  console.debug("SIGTERM signal received: closing HTTP server");
   server.close(() => {
-    console.debug('HTTP server closed');
-		prisma.$disconnect();
+    console.debug("HTTP server closed");
+    prisma.$disconnect();
   });
 });
 
 export default app;
-

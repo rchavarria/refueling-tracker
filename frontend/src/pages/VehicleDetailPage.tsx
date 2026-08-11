@@ -1,17 +1,17 @@
-import type {Refueling} from "@shared/schemas/refueling.js";
-import type {Reminder} from "@shared/schemas/reminder.js";
-import type {Maintenance} from "@shared/schemas/maintenance.js";
-import type {Vehicle} from "@shared/schemas/vehicle.js";
-import {calculateConsumption} from "@shared/statistics/index.js";
-import {useEffect, useState} from "react";
-import {Link, useParams} from "react-router-dom";
-import {fetchVehicleRefuelings} from "../api/refuelings";
-import {fetchVehicleReminders} from "../api/reminders";
-import {fetchVehicleMaintenances} from "../api/maintenances";
-import {fetchVehicle} from "../api/vehicles";
+import type { Maintenance } from "@shared/schemas/maintenance.js";
+import type { Refueling } from "@shared/schemas/refueling.js";
+import type { Reminder } from "@shared/schemas/reminder.js";
+import type { Vehicle } from "@shared/schemas/vehicle.js";
+import { calculateConsumption } from "@shared/statistics/index.js";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { fetchVehicleMaintenances } from "../api/maintenances";
+import { fetchVehicleRefuelings } from "../api/refuelings";
+import { fetchVehicleReminders } from "../api/reminders";
+import { fetchVehicle } from "../api/vehicles";
+import MaintenanceList from "../components/MaintenanceList";
 import RefuelingList from "../components/RefuelingList";
 import ReminderList from "../components/ReminderList";
-import MaintenanceList from "../components/MaintenanceList";
 
 export default function VehicleDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -80,7 +80,11 @@ export default function VehicleDetailPage() {
         </p>
       </div>
 
-      <ReminderList reminders={reminders} vehicleId={vehicle.id} currentMileage={vehicle.currentMileage} />
+      <ReminderList
+        reminders={reminders}
+        vehicleId={vehicle.id}
+        currentMileage={vehicle.currentMileage}
+      />
 
       <RefuelingList refuelings={refuelingsDesc} vehicleId={vehicle.id} stats={statsDesc} />
 

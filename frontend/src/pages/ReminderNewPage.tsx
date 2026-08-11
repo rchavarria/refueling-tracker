@@ -17,7 +17,9 @@ export default function ReminderNewPage() {
 
   useEffect(() => {
     if (!Number.isNaN(vehicleId)) {
-      fetchVehicle(vehicleId).then(setVehicle).catch(() => setError("Vehicle not found"));
+      fetchVehicle(vehicleId)
+        .then(setVehicle)
+        .catch(() => setError("Vehicle not found"));
     }
   }, [vehicleId]);
 
@@ -58,4 +60,3 @@ export default function ReminderNewPage() {
     </div>
   );
 }
-

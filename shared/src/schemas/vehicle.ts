@@ -21,4 +21,3 @@ export const vehicleSchema = createVehicleSchema.extend({
 export type CreateVehicle = z.infer<typeof createVehicleSchema>;
 export type UpdateVehicle = z.infer<typeof updateVehicleSchema>;
 export type Vehicle = z.infer<typeof vehicleSchema>;
-

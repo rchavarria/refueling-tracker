@@ -24,11 +24,13 @@ export default function App() {
           <Route path="/vehicles/:id/reminders/new" element={<ReminderNewPage />} />
           <Route path="/vehicles/:id/reminders/:reminderId/edit" element={<ReminderEditPage />} />
           <Route path="/vehicles/:id/maintenances/new" element={<MaintenanceNewPage />} />
-          <Route path="/vehicles/:id/maintenances/:maintenanceId/edit" element={<MaintenanceEditPage />} />
+          <Route
+            path="/vehicles/:id/maintenances/:maintenanceId/edit"
+            element={<MaintenanceEditPage />}
+          />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
   );
 }
-

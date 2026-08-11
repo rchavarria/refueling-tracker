@@ -1,6 +1,6 @@
+import type { RefuelingForStats } from "@shared/schemas/refueling.js";
 import { describe, expect, it } from "vitest";
 import { calculateConsumption } from "./statistics.service.js";
-import type { RefuelingForStats } from "@shared/schemas/refueling.js";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -104,4 +104,3 @@ describe("calculateConsumption", () => {
     });
   });
 });
-

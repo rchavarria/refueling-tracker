@@ -26,4 +26,3 @@ export async function createVehicle(data: CreateVehicle): Promise<Vehicle> {
   }
   return res.json() as Promise<Vehicle>;
 }
-

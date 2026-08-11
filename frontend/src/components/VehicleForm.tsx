@@ -25,9 +25,12 @@ export default function VehicleForm({ onSubmit, error, loading }: Props) {
       )}
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Name *</label>
+        <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+          Name *
+        </label>
         <input
           {...register("name")}
+          id="name"
           className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="My Car"
         />
@@ -35,9 +38,12 @@ export default function VehicleForm({ onSubmit, error, loading }: Props) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Brand *</label>
+        <label htmlFor="brand" className="block text-sm font-medium text-gray-700 mb-1">
+          Brand *
+        </label>
         <input
           {...register("brand")}
+          id="brand"
           className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Toyota"
         />
@@ -45,9 +51,12 @@ export default function VehicleForm({ onSubmit, error, loading }: Props) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Model *</label>
+        <label htmlFor="model" className="block text-sm font-medium text-gray-700 mb-1">
+          Model *
+        </label>
         <input
           {...register("model")}
+          id="model"
           className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Corolla"
         />
@@ -55,9 +64,12 @@ export default function VehicleForm({ onSubmit, error, loading }: Props) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">License Plate *</label>
+        <label htmlFor="licensePlate" className="block text-sm font-medium text-gray-700 mb-1">
+          License Plate *
+        </label>
         <input
           {...register("licensePlate")}
+          id="licensePlate"
           className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="1234 ABC"
         />
@@ -67,9 +79,12 @@ export default function VehicleForm({ onSubmit, error, loading }: Props) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Year *</label>
+        <label htmlFor="year" className="block text-sm font-medium text-gray-700 mb-1">
+          Year *
+        </label>
         <input
           {...register("year", { valueAsNumber: true })}
+          id="year"
           type="number"
           className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="2020"
@@ -87,4 +102,3 @@ export default function VehicleForm({ onSubmit, error, loading }: Props) {
     </form>
   );
 }
-

@@ -6,7 +6,9 @@ import ReminderColorTooltip from "./ReminderColorTooltip";
 import ReminderTableRow from "./ReminderTableRow";
 
 export default function UpcomingReminders() {
-  const [upcomingReminders, setUpcomingReminders] = useState<(Reminder & { vehicle: Vehicle })[]>([]);
+  const [upcomingReminders, setUpcomingReminders] = useState<(Reminder & { vehicle: Vehicle })[]>(
+    [],
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -49,7 +51,6 @@ export default function UpcomingReminders() {
       )}
 
       <ReminderColorTooltip />
-
     </section>
   );
 }

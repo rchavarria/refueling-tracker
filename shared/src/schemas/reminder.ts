@@ -40,4 +40,3 @@ export type ReminderType = z.infer<typeof reminderTypeEnum>;
 export type CreateReminder = z.infer<typeof createReminderSchema>;
 export type UpdateReminder = z.infer<typeof updateReminderSchema>;
 export type Reminder = z.infer<typeof reminderSchema>;
-

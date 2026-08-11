@@ -5,8 +5,8 @@ import {
   Chart as ChartJS,
   Filler,
   Legend,
-  LineElement,
   LinearScale,
+  LineElement,
   PointElement,
   Title,
   Tooltip,
@@ -15,23 +15,42 @@ import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import { fetchMonthlyKmPerVehicle } from "../api/statistics";
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler,
+);
 
 const MONTH_NAMES = [
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
 ];
 
 /** Fixed colour palette for vehicle lines */
 const VEHICLE_COLORS = [
-  "rgb(59, 130, 246)",   // blue
-  "rgb(239, 68, 68)",    // red
-  "rgb(16, 185, 129)",   // green
-  "rgb(245, 158, 11)",   // amber
-  "rgb(139, 92, 246)",   // violet
-  "rgb(236, 72, 153)",   // pink
-  "rgb(14, 165, 233)",   // sky
-  "rgb(168, 85, 247)",   // purple
+  "rgb(59, 130, 246)", // blue
+  "rgb(239, 68, 68)", // red
+  "rgb(16, 185, 129)", // green
+  "rgb(245, 158, 11)", // amber
+  "rgb(139, 92, 246)", // violet
+  "rgb(236, 72, 153)", // pink
+  "rgb(14, 165, 233)", // sky
+  "rgb(168, 85, 247)", // purple
 ];
 
 /** Convert "rgb(r, g, b)" to "rgba(r, g, b, alpha)" */
@@ -112,4 +131,3 @@ export default function MonthlyKmChart() {
     </section>
   );
 }
-

@@ -1,7 +1,7 @@
-import type {ConsumptionResult} from "@shared/statistics/index.js";
-import {Link} from "react-router-dom";
-import type {Refueling} from "@shared/schemas/refueling.js";
-import {useState} from "react";
+import type { Refueling } from "@shared/schemas/refueling.js";
+import type { ConsumptionResult } from "@shared/statistics/index.js";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const DEFAULT_VISIBLE = 10;
 
@@ -85,13 +85,10 @@ export default function RefuelingList({ refuelings, vehicleId, stats }: Props) {
             onClick={() => setShowAll((prev) => !prev)}
             className="text-sm text-blue-600 hover:text-blue-800 hover:underline font-medium"
           >
-            {showAll
-              ? "Show last 10"
-              : `Show all (${refuelings.length})`}
+            {showAll ? "Show last 10" : `Show all (${refuelings.length})`}
           </button>
         </div>
       )}
     </div>
   );
 }
-

@@ -7,13 +7,12 @@ import prisma from "./prisma.js";
  * or null if the vehicle has no refuelings yet.
  */
 export async function enrichVehicleWithMileage(
-	vehicle: Vehicle,
+  vehicle: Vehicle,
 ): Promise<Vehicle & { currentMileage: number | null }> {
-	const result = await prisma.refueling.aggregate({
-		where: { vehicleId: vehicle.id },
-		_max: { mileage: true },
-	});
+  const result = await prisma.refueling.aggregate({
+    where: { vehicleId: vehicle.id },
+    _max: { mileage: true },
+  });
 
-	return { ...vehicle, currentMileage: result._max.mileage ?? null };
+  return { ...vehicle, currentMileage: result._max.mileage ?? null };
 }
-

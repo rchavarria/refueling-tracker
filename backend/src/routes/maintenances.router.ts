@@ -1,9 +1,9 @@
 import { Router } from "express";
 import {
-	listVehicleMaintenances,
-	createVehicleMaintenance,
-	updateMaintenance,
-	deleteMaintenance,
+  createVehicleMaintenance,
+  deleteMaintenance,
+  listVehicleMaintenances,
+  updateMaintenance,
 } from "../controllers/maintenances.controller.js";
 
 /** Nested routes: mounted at /api/vehicles */
@@ -15,4 +15,3 @@ vehicleMaintenancesRouter.post("/:id/maintenances", createVehicleMaintenance);
 export const maintenancesRouter = Router();
 maintenancesRouter.put("/:id", updateMaintenance);
 maintenancesRouter.delete("/:id", deleteMaintenance);
-

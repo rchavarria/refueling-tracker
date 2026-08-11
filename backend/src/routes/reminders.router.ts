@@ -1,10 +1,10 @@
 import { Router } from "express";
 import {
-	listVehicleReminders,
-	createVehicleReminder,
-	getUpcomingReminders,
-	updateReminder,
-	deleteReminder,
+  createVehicleReminder,
+  deleteReminder,
+  getUpcomingReminders,
+  listVehicleReminders,
+  updateReminder,
 } from "../controllers/reminders.controller.js";
 
 /** Nested routes: mounted at /api/vehicles */
@@ -17,4 +17,3 @@ export const remindersRouter = Router();
 remindersRouter.get("/upcoming", getUpcomingReminders);
 remindersRouter.put("/:id", updateReminder);
 remindersRouter.delete("/:id", deleteReminder);
-

@@ -46,4 +46,3 @@ export type MaintenanceType = z.infer<typeof maintenanceTypeEnum>;
 export type CreateMaintenance = z.infer<typeof createMaintenanceSchema>;
 export type UpdateMaintenance = z.infer<typeof updateMaintenanceSchema>;
 export type Maintenance = z.infer<typeof maintenanceSchema>;
-
