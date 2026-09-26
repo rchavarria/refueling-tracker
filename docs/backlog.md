@@ -2,6 +2,8 @@
 
 ## Already implemented
 
+- 2026-09-26: dashboard: line chart showing L/100km for each individual refueling in the last
+  12 months (no monthly aggregation, one line per vehicle)
 - 2026-08-11: dashboard, reminders: show all enabled reminders, including those overdue by
   more than 7 days (the `upcoming` endpoint no longer filters by date)
 - 2026-04-01: dashboard, reminders: show just 3 columns: vehicle, date and mileage, show full description on hover via tooltip
