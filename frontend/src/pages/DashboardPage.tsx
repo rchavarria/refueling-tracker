@@ -1,5 +1,6 @@
 import MonthlyConsumptionChart from "../components/MonthlyConsumptionChart";
 import MonthlyKmChart from "../components/MonthlyKmChart";
+import RefuelingConsumptionChart from "../components/RefuelingConsumptionChart";
 import UpcomingReminders from "../components/UpcomingReminders";
 
 export default function DashboardPage() {
@@ -11,6 +12,7 @@ export default function DashboardPage() {
       <div className="lg:col-span-9">
         <MonthlyKmChart />
         <MonthlyConsumptionChart />
+        <RefuelingConsumptionChart />
       </div>
     </div>
   );
