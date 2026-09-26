@@ -18,7 +18,11 @@ vi.mock("../lib/prisma.js", () => ({
   },
 }));
 
-import { getMonthlyConsumptionPerVehicle, getMonthlyKmPerVehicle } from "./aggregate.service.js";
+import {
+  getMonthlyConsumptionPerVehicle,
+  getMonthlyKmPerVehicle,
+  getPerRefuelingConsumption,
+} from "./aggregate.service.js";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -245,5 +249,82 @@ describe("getMonthlyConsumptionPerVehicle", () => {
     const june = findRow(result.rows, "2025-06");
     // Honda: no data → null. Toyota: km=400, liters=30 → 7.5 L/100km
     expect(june.vehicleLitersPer100km).toEqual([null, 7.5]);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// getPerRefuelingConsumption
+// ---------------------------------------------------------------------------
+
+describe("getPerRefuelingConsumption", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    fixDate();
+  });
+
+  afterEach(() => {
+    restoreDate();
+  });
+
+  it("returns empty vehicles and points when there are no vehicles", async () => {
+    mockFindMany.mockResolvedValue([]);
+
+    const result = await getPerRefuelingConsumption();
+
+    expect(result).toEqual({ vehicles: [], points: [] });
+  });
+
+  it("returns one point per refueling using the reference refueling before the range", async () => {
+    mockFindMany.mockResolvedValue([{ id: 1, name: "Honda" }]);
+    mockRefuelingFindMany.mockResolvedValue([
+      refueling("2025-05-10", 11000, 40, 60),
+      refueling("2025-05-25", 11500, 35, 52.5),
+    ]);
+    mockFindFirst.mockResolvedValue(refueling("2025-03-20", 10500, 38, 57));
+
+    const result = await getPerRefuelingConsumption();
+
+    expect(result.vehicles).toEqual(["Honda"]);
+    expect(result.points).toEqual([
+      { date: "2025-05-10", vehicleIndex: 0, litersPer100km: 8, liters: 40, kmTraveled: 500 },
+      { date: "2025-05-25", vehicleIndex: 0, litersPer100km: 7, liters: 35, kmTraveled: 500 },
+    ]);
+  });
+
+  it("omits the first refueling when there is no reference and equal consecutive mileages", async () => {
+    mockFindMany.mockResolvedValue([{ id: 1, name: "Honda" }]);
+    mockRefuelingFindMany.mockResolvedValue([
+      refueling("2025-05-10", 11000, 40, 60),
+      refueling("2025-05-20", 11000, 10, 15),
+      refueling("2025-06-01", 11600, 42, 63),
+    ]);
+    mockFindFirst.mockResolvedValue(null);
+
+    const result = await getPerRefuelingConsumption();
+
+    expect(result.points).toEqual([
+      { date: "2025-06-01", vehicleIndex: 0, litersPer100km: 7, liters: 42, kmTraveled: 600 },
+    ]);
+  });
+
+  it("merges points from multiple vehicles ordered by date", async () => {
+    mockFindMany.mockResolvedValue([
+      { id: 1, name: "Honda" },
+      { id: 2, name: "Toyota" },
+    ]);
+    mockRefuelingFindMany
+      .mockResolvedValueOnce([refueling("2025-06-10", 11000, 40, 60)])
+      .mockResolvedValueOnce([refueling("2025-05-12", 21000, 30, 45)]);
+    mockFindFirst
+      .mockResolvedValueOnce(refueling("2025-03-20", 10500, 38, 57))
+      .mockResolvedValueOnce(refueling("2025-03-25", 20600, 32, 48));
+
+    const result = await getPerRefuelingConsumption();
+
+    expect(result.vehicles).toEqual(["Honda", "Toyota"]);
+    expect(result.points.map((p) => [p.date, p.vehicleIndex, p.litersPer100km])).toEqual([
+      ["2025-05-12", 1, 7.5],
+      ["2025-06-10", 0, 8],
+    ]);
   });
 });

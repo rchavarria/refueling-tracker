@@ -1,6 +1,8 @@
 import type {
   MonthlyConsumptionPerVehicleResponse,
   MonthlyKmPerVehicleResponse,
+  PerRefuelingConsumptionPoint,
+  PerRefuelingConsumptionResponse,
 } from "@shared/schemas/statistics.js";
 import prisma from "../lib/prisma.js";
 import { calculateConsumption } from "./statistics.service.js";
@@ -11,7 +13,10 @@ import { calculateConsumption } from "./statistics.service.js";
 
 interface VehicleMonthlyEntry {
   monthKey: string;
+  /** ISO date (YYYY-MM-DD) of the refueling */
+  date: string;
   kmTraveled: number | null;
+  litersPer100km: number | null;
   liters: number;
   cost: number;
 }
@@ -93,7 +98,9 @@ export async function getVehicleMonthlyData(): Promise<MonthlyDataResult> {
 
       entries.push({
         monthKey,
+        date: refDate.toISOString().slice(0, 10),
         kmTraveled: result.kmTraveled,
+        litersPer100km: result.litersPer100km,
         liters: refueling.liters,
         cost: refueling.totalPrice,
       });
@@ -183,6 +190,39 @@ export async function getMonthlyConsumptionPerVehicle(): Promise<MonthlyConsumpt
   });
 
   return { vehicles: vehicleNames, rows };
+}
+
+// ---------------------------------------------------------------------------
+// getPerRefuelingConsumption — L/100km for each individual refueling
+// ---------------------------------------------------------------------------
+
+/**
+ * Returns L/100km for every refueling in the last 12 months (no aggregation),
+ * one point per refueling, ordered by date ASC. Refuelings without a computable
+ * consumption (first refueling ever or equal consecutive mileages) are omitted.
+ */
+export async function getPerRefuelingConsumption(): Promise<PerRefuelingConsumptionResponse> {
+  const { vehicleData } = await getVehicleMonthlyData();
+
+  const vehicles = vehicleData.map((v) => v.vehicleName);
+  const points: PerRefuelingConsumptionPoint[] = [];
+
+  vehicleData.forEach((vehicle, vehicleIndex) => {
+    for (const entry of vehicle.entries) {
+      if (entry.litersPer100km === null || entry.kmTraveled === null) continue;
+      points.push({
+        date: entry.date,
+        vehicleIndex,
+        litersPer100km: entry.litersPer100km,
+        liters: entry.liters,
+        kmTraveled: entry.kmTraveled,
+      });
+    }
+  });
+
+  points.sort((a, b) => a.date.localeCompare(b.date) || a.vehicleIndex - b.vehicleIndex);
+
+  return { vehicles, points };
 }
 
 // ---------------------------------------------------------------------------
