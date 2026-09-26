@@ -1,5 +1,4 @@
 import type {
-  MonthlyConsumptionPerVehicleResponse,
   MonthlyKmPerVehicleResponse,
   PerRefuelingConsumptionPoint,
   PerRefuelingConsumptionResponse,
@@ -8,37 +7,36 @@ import prisma from "../lib/prisma.js";
 import { calculateConsumption } from "./statistics.service.js";
 
 // ---------------------------------------------------------------------------
-// Shared helper: fetches per-vehicle monthly consumption data for the last 12 months
+// Shared helper: fetches per-vehicle refueling consumption data for the last 12 months
 // ---------------------------------------------------------------------------
 
-interface VehicleMonthlyEntry {
+interface VehicleRefuelingEntry {
+  /** Month of the refueling (YYYY-MM, local time) */
   monthKey: string;
   /** ISO date (YYYY-MM-DD) of the refueling */
   date: string;
   kmTraveled: number | null;
   litersPer100km: number | null;
   liters: number;
-  cost: number;
 }
 
-interface VehicleMonthlyData {
-  vehicleId: number;
+interface VehicleRefuelingData {
   vehicleName: string;
-  entries: VehicleMonthlyEntry[];
+  entries: VehicleRefuelingEntry[];
 }
 
-export interface MonthlyDataResult {
+interface VehicleRefuelingDataResult {
   months: string[];
-  vehicleData: VehicleMonthlyData[];
+  vehicleData: VehicleRefuelingData[];
 }
 
 /**
  * Returns the list of 12 month keys and, for each vehicle that has refuelings,
- * the per-refueling consumption entries bucketed by month.
+ * the per-refueling consumption entries of the last 12 months.
  * This is the shared foundation used by `getMonthlyKmPerVehicle`
- * and `getMonthlyConsumptionPerVehicle`.
+ * and `getPerRefuelingConsumption`.
  */
-export async function getVehicleMonthlyData(): Promise<MonthlyDataResult> {
+async function getVehicleRefuelingData(): Promise<VehicleRefuelingDataResult> {
   const now = new Date();
   const cutoffDate = new Date(now.getFullYear(), now.getMonth() - 11, 1);
 
@@ -57,7 +55,7 @@ export async function getVehicleMonthlyData(): Promise<MonthlyDataResult> {
     select: { id: true, name: true },
   });
 
-  const vehicleData: VehicleMonthlyData[] = [];
+  const vehicleData: VehicleRefuelingData[] = [];
 
   for (const vehicle of vehicles) {
     // Refuelings within the range
@@ -88,7 +86,7 @@ export async function getVehicleMonthlyData(): Promise<MonthlyDataResult> {
     // Skip the reference result (index 0) if we had a reference
     const startIndex = reference ? 1 : 0;
 
-    const entries: VehicleMonthlyEntry[] = [];
+    const entries: VehicleRefuelingEntry[] = [];
     for (let i = startIndex; i < consumptionResults.length; i++) {
       const refueling = forStats[i];
       const result = consumptionResults[i];
@@ -102,12 +100,10 @@ export async function getVehicleMonthlyData(): Promise<MonthlyDataResult> {
         kmTraveled: result.kmTraveled,
         litersPer100km: result.litersPer100km,
         liters: refueling.liters,
-        cost: refueling.totalPrice,
       });
     }
 
     vehicleData.push({
-      vehicleId: vehicle.id,
       vehicleName: vehicle.name,
       entries,
     });
@@ -121,11 +117,10 @@ export async function getVehicleMonthlyData(): Promise<MonthlyDataResult> {
 // ---------------------------------------------------------------------------
 
 /**
- * Returns km traveled per month for the last 12 months, broken down per vehicle,
- * plus a total across all vehicles.
+ * Returns km traveled per month for the last 12 months, broken down per vehicle.
  */
 export async function getMonthlyKmPerVehicle(): Promise<MonthlyKmPerVehicleResponse> {
-  const { months, vehicleData } = await getVehicleMonthlyData();
+  const { months, vehicleData } = await getVehicleRefuelingData();
 
   const vehicleNames = vehicleData.map((v) => v.vehicleName);
 
@@ -144,50 +139,10 @@ export async function getMonthlyKmPerVehicle(): Promise<MonthlyKmPerVehicleRespo
     }
   }
 
-  const rows = months.map((month) => {
-    const vehicleKm = acc[month].map((km) => round2(km));
-    const totalKm = round2(vehicleKm.reduce((sum, km) => sum + km, 0));
-    return { month, vehicleKm, totalKm };
-  });
-
-  return { vehicles: vehicleNames, rows };
-}
-
-// ---------------------------------------------------------------------------
-// getMonthlyConsumptionPerVehicle — L/100km per month broken down by vehicle
-// ---------------------------------------------------------------------------
-
-/**
- * Returns L/100km per month for the last 12 months, broken down per vehicle.
- * Months where a vehicle has no km data produce `null`.
- */
-export async function getMonthlyConsumptionPerVehicle(): Promise<MonthlyConsumptionPerVehicleResponse> {
-  const { months, vehicleData } = await getVehicleMonthlyData();
-
-  const vehicleNames = vehicleData.map((v) => v.vehicleName);
-
-  // Accumulator: month → per-vehicle { totalKm, totalLiters }
-  const acc: Record<string, { totalKm: number; totalLiters: number }[]> = {};
-  for (const month of months) {
-    acc[month] = vehicleData.map(() => ({ totalKm: 0, totalLiters: 0 }));
-  }
-
-  for (let vIdx = 0; vIdx < vehicleData.length; vIdx++) {
-    for (const entry of vehicleData[vIdx].entries) {
-      if (!(entry.monthKey in acc)) continue;
-      if (entry.kmTraveled !== null) {
-        acc[entry.monthKey][vIdx].totalKm += entry.kmTraveled;
-      }
-      acc[entry.monthKey][vIdx].totalLiters += entry.liters;
-    }
-  }
-
-  const rows = months.map((month) => {
-    const vehicleLitersPer100km = acc[month].map((data) =>
-      data.totalKm > 0 ? round2((data.totalLiters / data.totalKm) * 100) : null,
-    );
-    return { month, vehicleLitersPer100km };
-  });
+  const rows = months.map((month) => ({
+    month,
+    vehicleKm: acc[month].map((km) => round2(km)),
+  }));
 
   return { vehicles: vehicleNames, rows };
 }
@@ -202,7 +157,7 @@ export async function getMonthlyConsumptionPerVehicle(): Promise<MonthlyConsumpt
  * consumption (first refueling ever or equal consecutive mileages) are omitted.
  */
 export async function getPerRefuelingConsumption(): Promise<PerRefuelingConsumptionResponse> {
-  const { vehicleData } = await getVehicleMonthlyData();
+  const { vehicleData } = await getVehicleRefuelingData();
 
   const vehicles = vehicleData.map((v) => v.vehicleName);
   const points: PerRefuelingConsumptionPoint[] = [];
