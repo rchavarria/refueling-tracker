@@ -29,3 +29,22 @@ export const monthlyConsumptionPerVehicleResponseSchema = z.object({
 export type MonthlyConsumptionPerVehicleResponse = z.infer<
   typeof monthlyConsumptionPerVehicleResponseSchema
 >;
+
+/** Schema for the L/100km-per-refueling response (last 12 months, no aggregation) */
+export const perRefuelingConsumptionResponseSchema = z.object({
+  vehicles: z.array(z.string()),
+  points: z.array(
+    z.object({
+      /** ISO date (YYYY-MM-DD) */
+      date: z.string(),
+      /** Index into `vehicles` */
+      vehicleIndex: z.number().int().nonnegative(),
+      litersPer100km: z.number(),
+      liters: z.number(),
+      kmTraveled: z.number(),
+    }),
+  ),
+});
+
+export type PerRefuelingConsumptionResponse = z.infer<typeof perRefuelingConsumptionResponseSchema>;
+export type PerRefuelingConsumptionPoint = PerRefuelingConsumptionResponse["points"][number];
