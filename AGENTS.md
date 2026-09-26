@@ -55,7 +55,7 @@ Before finishing a task, run the verification commands in this order:
 ## Code style
 
 - Biome enforces the style: 2-space indentation, double quotes, semicolons, 100-column lines,
-  CRLF endings. Run `npm run lint:fix` instead of hand-formatting.
+  LF endings. Run `npm run lint:fix` instead of hand-formatting.
 - TypeScript strict mode. Avoid `any`; if unavoidable, add a `biome-ignore` comment with a reason.
 - Prefer explicit, descriptive names, and document exported functions with a short JSDoc.
 - Every `<label>` needs `htmlFor` matching the control `id`.
